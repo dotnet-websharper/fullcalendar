@@ -28,18 +28,18 @@ jobs:
         run: npm install
         working-directory: ./WebSharper.FullCalendar.Sample
 
-      - name: Install Paket as a .NET Tool
-        run: dotnet tool restore
+      # - name: Install Paket as a .NET Tool
+      #   run: dotnet tool restore
 
-      - name: Add credentials for Paket
-        run:
-          dotnet tool run paket config
-            add-credentials https://nuget.pkg.github.com/dotnet-websharper/index.json
-            --username intellifactory-gh 
-            --password ${{ secrets.PAT_PACKAGE }}
+      # - name: Add credentials for Paket
+      #   run:
+      #     dotnet tool run paket config
+      #       add-credentials https://nuget.pkg.github.com/dotnet-websharper/index.json
+      #       --username intellifactory-gh 
+      #       --password ${{ secrets.PAT_PACKAGE }}
 
-      - name: Restore Dependencies Using Paket
-        run: dotnet tool run paket restore
+      # - name: Restore Dependencies Using Paket
+      #   run: dotnet tool run paket restore
 
       - name: Add GitHub registry NuGet source
         run: 
@@ -50,8 +50,8 @@ jobs:
             --password ${{ secrets.PAT_PACKAGE }} 
             --store-password-in-clear-text
 
-      - name: Restore Dependencies Using Paket
-        run: dotnet paket restore
+      # - name: Restore Dependencies Using Paket
+      #   run: dotnet paket restore
 
       - name: Build WebSharper Project
         run: |
