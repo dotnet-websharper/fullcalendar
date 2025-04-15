@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	  
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<NpmDependencies>
+			<NpmPackage Name="@fullcalendar/core" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/daygrid" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/interaction" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
+		</NpmDependencies>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Core.fs" />
+    <Compile Include="Daygrid.fs" />
+    <Compile Include="Interaction.fs" />
+    <Compile Include="Main.fs" />
+    <None Include="wsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WebSharper" Version="8.0.0.540" />    
+    <PackageReference Include="WebSharper.FSharp" Version="8.0.0.540" />    
+    <PackageReference Include="WebSharper.TouchEvents" Version="8.0.0.540" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="9.0.300-beta.25181.1" />
+  </ItemGroup>
+
+</Project>

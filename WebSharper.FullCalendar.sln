@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.FullCalendar", "WebSharper.FullCalendar\WebSharper.FullCalendar.fsproj", "{F7B34950-EF14-4B68-A001-81BEF4A2885F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharper.FullCalendar.Sample", "WebSharper.FullCalendar.Sample\WebSharper.FullCalendar.Sample.fsproj", "{9DA011DA-6E66-4ACE-B528-F2E615260683}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7B34950-EF14-4B68-A001-81BEF4A2885F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7B34950-EF14-4B68-A001-81BEF4A2885F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7B34950-EF14-4B68-A001-81BEF4A2885F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7B34950-EF14-4B68-A001-81BEF4A2885F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DA011DA-6E66-4ACE-B528-F2E615260683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA011DA-6E66-4ACE-B528-F2E615260683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DA011DA-6E66-4ACE-B528-F2E615260683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DA011DA-6E66-4ACE-B528-F2E615260683}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85E52B48-7F54-4FD8-9584-96CA09B8DF83}
+	EndGlobalSection
+EndGlobal

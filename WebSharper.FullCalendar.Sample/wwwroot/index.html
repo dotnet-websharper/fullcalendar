@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>WebSharper.FullCalendar.Sample</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="Content/WebSharper.FullCalendar.Sample.css" />
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] {
+            display: none;
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 30px;
+            text-align: center;
+        }
+
+        #calendar {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+    </style>
+    <script type="module" src="Content/WebSharper.FullCalendar.Sample.head.js"></script>
+</head>
+<body>
+    <h1>📅 My Calendar</h1>
+    <h4>Select any dates and enter your event name</h4>
+    <div id="main" ws-children-template="Main">
+        <div ws-onafterrender="PageInit">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    <script type="module" src="Content/WebSharper.FullCalendar.Sample.min.js"></script>
+</body>
+</html>
