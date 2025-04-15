@@ -293,11 +293,14 @@ module Definition =
                 InteractionPlugin.FeaturefulElementDragging
                 InteractionPlugin.OptionRefiners
                 InteractionPlugin.DateClickArg
-                InteractionPlugin.EventDragArg
-                InteractionPlugin.EventResizeStartStopArg
+                InteractionPlugin.EventDragStopArg
+                InteractionPlugin.EventDragStartArg
+                InteractionPlugin.EventResizeStartArg
+                InteractionPlugin.EventResizeStopArg
                 InteractionPlugin.EventResizeDoneArg
                 InteractionPlugin.DropArg
-                InteractionPlugin.EventReceiveLeaveArg
+                InteractionPlugin.EventReceiveArg
+                InteractionPlugin.EventLeaveArg
                 InteractionPlugin.ListenerRefiners
                 InteractionPlugin.ExternalDraggableSettings
                 InteractionPlugin.ExternalDraggable

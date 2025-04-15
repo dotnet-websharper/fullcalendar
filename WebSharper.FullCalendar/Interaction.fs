@@ -184,34 +184,49 @@ module InteractionPlugin =
             "jsEvent", T<Dom.MouseEvent>
             "view", CoreInterfaces.ViewApi.Type
         ]
+        |> Import "DateClickArg" "@fullcalendar/interaction"
 
-    let EventDragArg =
-        Pattern.Config "EventDragArg" {
-            Required = [
-                "el", T<HTMLElement>
-                "event", CoreInterfaces.EventApi.Type
-                "jsEvent", T<Dom.MouseEvent>
-                "view", CoreInterfaces.ViewApi.Type
-            ]
+    let EventDragArgFields = [
+        "el", T<HTMLElement>
+        "event", CoreInterfaces.EventApi.Type
+        "jsEvent", T<Dom.MouseEvent>
+        "view", CoreInterfaces.ViewApi.Type
+    ]
+
+    let EventDragStopArg = 
+        Pattern.Config "EventDragStopArg" {
+            Required = EventDragArgFields
             Optional = []
         }
+        |> Import "EventDragStopArg" "@fullcalendar/interaction"
 
-    let EventDragStopArg = EventDragArg
-    let EventDragStartArg = EventDragArg
-
-    let EventResizeStartStopArg =
-        Pattern.Config "EventResizeStartStopArg" {
-            Required = [
-                "el", T<HTMLElement>
-                "event", CoreInterfaces.EventApi.Type
-                "jsEvent", T<Dom.MouseEvent>
-                "view", CoreInterfaces.ViewApi.Type
-            ]
+    let EventDragStartArg = 
+        Pattern.Config "EventDragStartArg" {
+            Required = EventDragArgFields
             Optional = []
         }
+        |> Import "EventDragStartArg" "@fullcalendar/interaction"
 
-    let EventResizeStartArg = EventResizeStartStopArg
-    let EventResizeStopArg = EventResizeStartStopArg
+    let EventResizeStartStopArgFields = [
+        "el", T<HTMLElement>
+        "event", CoreInterfaces.EventApi.Type
+        "jsEvent", T<Dom.MouseEvent>
+        "view", CoreInterfaces.ViewApi.Type
+    ]
+
+    let EventResizeStartArg = 
+        Pattern.Config "EventResizeStartArg" {
+            Required = EventResizeStartStopArgFields
+            Optional = []
+        }
+        |> Import "EventResizeStartArg" "@fullcalendar/interaction"
+
+    let EventResizeStopArg = 
+        Pattern.Config "EventResizeStopArg" {
+            Required = EventResizeStartStopArgFields
+            Optional = []
+        }
+        |> Import "EventResizeStopArg" "@fullcalendar/interaction"
 
     let EventResizeDoneArg =
         Class "EventResizeDoneArg"
@@ -223,6 +238,7 @@ module InteractionPlugin =
             "jsEvent", T<Dom.MouseEvent>
             "view", CoreInterfaces.ViewApi.Type
         ]
+        |> Import "EventResizeDoneArg" "@fullcalendar/interaction"
 
     let DropArg =
         Class "DropArg"
@@ -232,21 +248,29 @@ module InteractionPlugin =
             "jsEvent", T<Dom.MouseEvent>
             "view", CoreInterfaces.ViewApi.Type
         ]
+        |> Import "DropArg" "@fullcalendar/interaction"
 
-    let EventReceiveLeaveArg =
-        Pattern.Config "EventReceiveLeaveArg" {
-            Required = [
-                "draggedEl", T<HTMLElement>
-                "event", CoreInterfaces.EventApi.Type
-                "relatedEvents", !| CoreInterfaces.EventApi
-                "revert", T<unit> ^-> T<unit>
-                "view", CoreInterfaces.ViewApi.Type
-            ]
+    let EventReceiveLeaveArgFields = [
+        "draggedEl", T<HTMLElement>
+        "event", CoreInterfaces.EventApi.Type
+        "relatedEvents", !| CoreInterfaces.EventApi
+        "revert", T<unit> ^-> T<unit>
+        "view", CoreInterfaces.ViewApi.Type
+    ]
+
+    let EventReceiveArg = 
+        Pattern.Config "EventReceiveArg" {
+            Required = EventReceiveLeaveArgFields
             Optional = []
         }
+        |> Import "EventReceiveArg" "@fullcalendar/interaction"
 
-    let EventReceiveArg = EventReceiveLeaveArg
-    let EventLeaveArg = EventReceiveLeaveArg
+    let EventLeaveArg = 
+        Pattern.Config "EventLeaveArg" {
+            Required = EventReceiveLeaveArgFields
+            Optional = []
+        }
+        |> Import "EventLeaveArg" "@fullcalendar/interaction"
 
     let ListenerRefinersOptionalFields = [
         "dateClick", (DateClickArg?arg ^-> T<unit>)
@@ -295,6 +319,7 @@ module InteractionPlugin =
                 "appendTo", T<HTMLElement>
             ]
         }
+        |> Import "ExternalDraggable" "@fullcalendar/interaction"
 
     let ExternalDraggable =
         Class "ExternalDraggable"
@@ -350,3 +375,4 @@ module InteractionPlugin =
             "dragging" =@ InferredElementDragging
             "destroy" => T<unit> ^-> T<unit>
         ]
+        |> Import "ThirdPartyDraggable" "@fullcalendar/interaction"

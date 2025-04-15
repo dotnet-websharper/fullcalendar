@@ -15,6 +15,7 @@ module DaygridPlugin =
             "firstCol", T<int>
             "lastCol", T<int>
         ]
+        |> Import "TableSeg" "@fullcalendar/daygrid"
 
     let DayTableProps =
         Class "DayTableProps"
@@ -50,6 +51,7 @@ module DaygridPlugin =
         |+> Instance [
             "render" => T<unit> ^-> Core.VNode
         ]
+        |> Import "DayTable" "@fullcalendar/daygrid"
 
     let DayTableSlicer =
         Class "DayTableSlicer"
@@ -58,6 +60,7 @@ module DaygridPlugin =
             "forceDayIfListItem" =@ T<bool>
             "sliceRange" => CoreInterfaces.DateRange?dateRange * Core.DayTableModel?model ^-> !| TableSeg
         ]
+        |> Import "DayTableSlicer" "@fullcalendar/daygrid"
 
     let TableDateProfileGenerator =
         Class "TableDateProfileGenerator"
@@ -116,6 +119,7 @@ module DaygridPlugin =
             "prepareHits" => T<unit> ^-> T<unit>
             "queryHit" => T<float>?left * T<float>?top ^-> CoreInterfaces.Hit
         ]
+        |> Import "TableRows" "@fullcalendar/daygrid"
 
     let TableProps =
         Class "TableProps"
@@ -139,6 +143,7 @@ module DaygridPlugin =
             "requestScrollReset" => T<unit> ^-> T<unit>
             "flushScrollReset" => T<unit> ^-> T<unit>
         ]
+        |> Import "Table" "@fullcalendar/daygrid"
 
     let TableView =
         Generic - fun state ->
@@ -148,6 +153,7 @@ module DaygridPlugin =
             "renderSimpleLayout" => CoreInterfaces.ChunkConfigRowContent?headerRowContent * (CoreInterfaces.ChunkContentCallbackArgs ^-> Core.VNode)?bodyContent ^-> Core.VNode
             "renderHScrollLayout" => CoreInterfaces.ChunkConfigRowContent?headerRowContent * (CoreInterfaces.ChunkContentCallbackArgs ^-> Core.VNode)?bodyContent * T<int>?colCnt * T<int>?dayMinWidth^-> Core.VNode
         ]
+        |> Import "TableView" "@fullcalendar/daygrid"
 
     let DayTableView =
         Class "DayTableView"
@@ -155,3 +161,4 @@ module DaygridPlugin =
         |+> Instance [
             "render" => T<unit> ^-> Core.VNode
         ]
+        |> Import "DayTableView" "@fullcalendar/daygrid"
