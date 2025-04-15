@@ -44,7 +44,13 @@ To use this package in your WebSharper project, install it via NuGet:
    dotnet build WebSharper.FullCalendar/WebSharper.FullCalendar.fsproj
    ```
 
-3. Build and Run the Sample Project:
+3. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Build and Run the Sample Project:
 
    ```bash
    cd WebSharper.FullCalendar.Sample
@@ -53,7 +59,7 @@ To use this package in your WebSharper project, install it via NuGet:
    npx vite
    ```
 
-4. Open the hosted sample in your browser to see FullCalendar in action.
+5. Open the hosted sample in your browser to see FullCalendar in action.
 
 ## Example Usage
 
