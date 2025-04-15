@@ -21,7 +21,8 @@ module Core =
         Class "DateEnv" 
 
     let CalendarImpl =
-        Class "CalendarImpl"        
+        Class "CalendarImpl"  
+        |> Import "CalendarImpl" "@fullcalendar/core"
 
     let EventImpl = 
         Class "EventImpl"
@@ -492,6 +493,7 @@ module Core =
                 "date", T<Date>
                 "view", ViewApi.Type
             ]
+            |> Import "SlotLaneContentArg" "@fullcalendar/core"
 
         let SlotLabelContentArg = 
             Pattern.Config "SlotLabelContentArg" {
@@ -540,6 +542,7 @@ module Core =
                     "view", ViewApi.Type
                 ]
             }
+            |> Import "ViewContentArg" "@fullcalendar/core"
 
         let NowIndicatorContentArg = 
             Pattern.Config "NowIndicatorContentArg" {
@@ -642,6 +645,7 @@ module Core =
             |+> Pattern.OptionalFields [
                 "el", T<HTMLElement>
             ]
+            |> Import "WeekNumberMountArg" "@fullcalendar/core"
 
         let ViewMountArg = 
             Class "ViewMountArg"
@@ -674,6 +678,7 @@ module Core =
             |+> Pattern.OptionalFields [
                 "el", T<HTMLElement>
             ]
+            |> Import "SlotLaneMountArg" "@fullcalendar/core"
 
         let SlotLabelMountArg = 
             Class "SlotLabelMountArg"
@@ -1804,6 +1809,7 @@ module Core =
             |+> Pattern.OptionalFields [
                 "el", T<HTMLElement>
             ]
+            |> Import "MoreLinkMountArg" "@fullcalendar/core"
 
         let ElRef = T<HTMLElement> + T<obj>
 
@@ -1950,6 +1956,7 @@ module Core =
                 "remove" => T<unit> ^-> T<unit>
                 "refetch" => T<unit> ^-> T<unit>  
             ]
+            |> Import "EventSourceApi" "@fullcalendar/core"
 
         let BaseOptionsOptionalFields = [
             "navLinkDayClick", T<string> + (CalendarApi?this * T<Date>?date * T<Dom.UIEvent>?jsEvent ^-> T<unit>)
@@ -3141,6 +3148,7 @@ module Core =
         |+> Static [
             Constructor (T<string>?message * T<Response>?response)
         ]
+        |> Import "JsonRequestError" "@fullcalendar/core"
 
     let PositionCache =
         Class "PositionCache"

@@ -33,10 +33,13 @@ jobs:
 
       - name: Add credentials for Paket
         run:
-          dotnet paket config
+          dotnet tool run paket config
             add-credentials https://nuget.pkg.github.com/dotnet-websharper/index.json
             --username intellifactory-gh 
             --password ${{ secrets.PAT_PACKAGE }}
+
+      - name: Restore Dependencies Using Paket
+        run: dotnet tool run paket restore
 
       - name: Add GitHub registry NuGet source
         run: 
