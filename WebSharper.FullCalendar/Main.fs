@@ -7,6 +7,25 @@ module Definition =
     module CoreInterfaces = Core.Interfaces
     module CoreEnums = Core.Enums
 
+    CoreInterfaces.CalendarListenerRefinersOptionalFields.AddRange InteractionPlugin.ListenerRefinersOptionalFields
+
+    CoreInterfaces.CalendarOptions 
+        |+> Pattern.RequiredFields []
+        |+> Pattern.OptionalFields (
+            CoreInterfaces.CalendarOptionRefinersOptionalFields @
+            (CoreInterfaces.CalendarListenerRefinersOptionalFields |> List.ofSeq) @
+            CoreInterfaces.BaseOptionsOptionalFields
+        )
+        |> ignore
+
+    CoreInterfaces.LocaleInput
+        |+> Pattern.OptionalFields (
+            CoreInterfaces.CalendarOptionRefinersOptionalFields @
+            (CoreInterfaces.CalendarListenerRefinersOptionalFields |> List.ofSeq) @
+            CoreInterfaces.BaseOptionsOptionalFields
+        )
+        |> ignore
+
     let FullCalendar = 
         Class "FullCalendar"
         |+> Static [
@@ -15,6 +34,15 @@ module Definition =
 
             "dayGridPlugin" =? CoreInterfaces.PluginDef
             |> ImportDefault "@fullcalendar/daygrid"
+
+            "listPlugin" =? CoreInterfaces.PluginDef
+            |> ImportDefault "@fullcalendar/list"
+
+            "multimonthPlugin" =? CoreInterfaces.PluginDef
+            |> ImportDefault "@fullcalendar/multimonth"
+
+            "timegridPlugin" =? CoreInterfaces.PluginDef
+            |> ImportDefault "@fullcalendar/timegrid"
         ]
 
     let Assembly =
@@ -22,6 +50,7 @@ module Definition =
             Namespace "WebSharper.FullCalendar" [
                 FullCalendar
                 // Core Classes
+                Core.NamedTimeZoneImpl
                 Core.DateEnv
                 Core.CalendarImpl
                 Core.EventImpl
@@ -60,6 +89,7 @@ module Definition =
                 Core.EventContainer
                 Core.BgEvent
                 Core.Slicer
+                Core.Splitter
 
                 // Core Enums
                 CoreEnums.MoreLinkSimpleActionEnums
@@ -70,6 +100,8 @@ module Definition =
                 CoreEnums.OverflowValue
 
                 // Core Interfaces
+                CoreInterfaces.NoEventsContentArg
+                CoreInterfaces.NoEventsMountArg
                 CoreInterfaces.CalendarApi
                 CoreInterfaces.EventApi
                 CoreInterfaces.CalendarListenerRefiners
@@ -130,7 +162,6 @@ module Definition =
                 CoreInterfaces.AllDayMountArg
                 CoreInterfaces.ParsedMarkerResult
                 CoreInterfaces.GreatestUnit
-                CoreInterfaces.NamedTimeZoneImpl
                 CoreInterfaces.NamedTimeZoneImplClass
                 CoreInterfaces.DateEnvSettings
                 CoreInterfaces.DateMarkerMeta
@@ -291,7 +322,6 @@ module Definition =
                 InteractionPlugin.ScrollGeomCache
                 InteractionPlugin.AutoScroller
                 InteractionPlugin.FeaturefulElementDragging
-                InteractionPlugin.OptionRefiners
                 InteractionPlugin.DateClickArg
                 InteractionPlugin.EventDragStopArg
                 InteractionPlugin.EventDragStartArg
@@ -308,6 +338,27 @@ module Definition =
                 InteractionPlugin.ThirdPartyDraggableSettings
                 InteractionPlugin.ThirdPartyDraggable
 
+                // List Plugin
+                ListPlugin.ListView
+                ListPlugin.ListViewState
+
+                // Timegrid Plugin
+                TimegridPlugin.TimeCols
+                TimegridPlugin.TimeColsState
+                TimegridPlugin.TimeColsProps
+                TimegridPlugin.DayTimeColsSlicer
+                TimegridPlugin.DayTimeCols
+                TimegridPlugin.DayTimeColsProps
+                TimegridPlugin.TimeColsSeg
+                TimegridPlugin.DayTimeColsView
+                TimegridPlugin.TimeColsView
+                TimegridPlugin.State
+                TimegridPlugin.MaxEventProps
+                TimegridPlugin.TimeColsViewState
+                TimegridPlugin.TimeColsSlatsCoords
+                TimegridPlugin.TimeSlatMeta
+                TimegridPlugin.AllDaySplitter
+                TimegridPlugin.AllDaySplitterKeyInfo
             ]
         ]
 

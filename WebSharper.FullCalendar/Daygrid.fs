@@ -7,43 +7,45 @@ open WebSharper.InterfaceGenerator
 module DaygridPlugin = 
     module CoreInterfaces = Core.Interfaces
         
-    let TableSeg =
-        Class "TableSeg"
-        |=> Inherits CoreInterfaces.Seg
-        |+> Pattern.RequiredFields [
-            "row", T<int>
-            "firstCol", T<int>
-            "lastCol", T<int>
-        ]
+    let TableSeg = 
+        Pattern.Config "TableSeg" {
+            Required = []
+            Optional = [
+                "row", T<int>
+                "firstCol", T<int>
+                "lastCol", T<int>
+            ] @ CoreInterfaces.SegFields // Inherits CoreInterfaces.Seg
+        }
         |> Import "TableSeg" "@fullcalendar/daygrid"
 
+
     let DayTableProps =
-        Class "DayTableProps"
-        |+> Pattern.RequiredFields [
-            "dateProfile", CoreInterfaces.DateProfile.Type
-            "dayTableModel", Core.DayTableModel.Type
-            "nextDayThreshold", CoreInterfaces.Duration.Type
-            "businessHours", CoreInterfaces.EventStore.Type
-            "eventStore", CoreInterfaces.EventStore.Type
-            "eventUiBases", CoreInterfaces.EventUiHash
-            "dateSelection", !?CoreInterfaces.DateSpan.Type
-            "eventSelection", T<string>
-            "eventDrag", !?CoreInterfaces.EventInteractionState.Type
-            "eventResize", !?CoreInterfaces.EventInteractionState.Type
-            "colGroupNode", Core.VNode
-            "tableMinWidth", Core.CssDimValue
-            "dayMaxEvents", T<bool> + T<int>
-            "dayMaxEventRows", T<bool> + T<int>
-            "expandRows", T<bool>
-            "showWeekNumbers", T<bool>
-            "forPrint", T<bool>
-        ]
-        |+> Pattern.OptionalFields [
-            "renderRowIntro", T<unit> ^-> Core.VNode
-            "headerAlignElRef", T<HTMLElement>
-            "clientWidth", T<int>
-            "clientHeight", T<int>
-        ]
+        Pattern.Config "DayTableProps" {
+            Required = []
+            Optional = [
+                "renderRowIntro", T<unit> ^-> Core.VNode
+                "headerAlignElRef", T<HTMLElement>
+                "clientWidth", T<int>
+                "clientHeight", T<int>
+                "dateProfile", CoreInterfaces.DateProfile.Type
+                "dayTableModel", Core.DayTableModel.Type
+                "nextDayThreshold", CoreInterfaces.Duration.Type
+                "businessHours", CoreInterfaces.EventStore.Type
+                "eventStore", CoreInterfaces.EventStore.Type
+                "eventUiBases", CoreInterfaces.EventUiHash
+                "dateSelection", !?CoreInterfaces.DateSpan.Type
+                "eventSelection", T<string>
+                "eventDrag", !?CoreInterfaces.EventInteractionState.Type
+                "eventResize", !?CoreInterfaces.EventInteractionState.Type
+                "colGroupNode", Core.VNode
+                "tableMinWidth", Core.CssDimValue
+                "dayMaxEvents", T<bool> + T<int>
+                "dayMaxEventRows", T<bool> + T<int>
+                "expandRows", T<bool>
+                "showWeekNumbers", T<bool>
+                "forPrint", T<bool>
+            ]
+        }
 
     let DayTable =
         Class "DayTable"
@@ -82,29 +84,30 @@ module DaygridPlugin =
 
     let buildDayTableRenderRange = BuildDayTableRenderRangeProps?props ^-> CoreInterfaces.DateRange
 
+    let TableRowsPropsFields = [
+        "dateProfile", CoreInterfaces.DateProfile.Type
+        "cells", !| (!| CoreInterfaces.DayTableCell)
+        "showWeekNumbers", T<bool>
+        "clientWidth", T<int>
+        "clientHeight", T<int>
+        "businessHourSegs", !| TableSeg
+        "bgEventSegs", !| TableSeg
+        "fgEventSegs", !| TableSeg
+        "dateSelectionSegs", !| TableSeg
+        "eventSelection", T<string>
+        "eventDrag", !?CoreInterfaces.EventSegUiInteractionState
+        "eventResize", !?CoreInterfaces.EventSegUiInteractionState
+        "dayMaxEvents", T<bool> + T<int>
+        "dayMaxEventRows", T<bool> + T<int>
+        "forPrint", T<bool>
+        "renderRowIntro", T<unit> ^-> Core.VNode
+        "isHitComboAllowed", CoreInterfaces.Hit?hit0 * CoreInterfaces.Hit?hit1 ^-> T<bool>
+    ]
+
     let TableRowsProps =
         Pattern.Config "TableRowsProps" {
-            Required = [
-                "dateProfile", CoreInterfaces.DateProfile.Type
-                "cells", !| (!| CoreInterfaces.DayTableCell)
-                "showWeekNumbers", T<bool>
-                "clientWidth", T<int>
-                "clientHeight", T<int>
-                "businessHourSegs", !| TableSeg
-                "bgEventSegs", !| TableSeg
-                "fgEventSegs", !| TableSeg
-                "dateSelectionSegs", !| TableSeg
-                "eventSelection", T<string>
-                "eventDrag", !?CoreInterfaces.EventSegUiInteractionState
-                "eventResize", !?CoreInterfaces.EventSegUiInteractionState
-                "dayMaxEvents", T<bool> + T<int>
-                "dayMaxEventRows", T<bool> + T<int>
-                "forPrint", T<bool>
-            ]
-            Optional = [
-                "renderRowIntro", T<unit> ^-> Core.VNode
-                "isHitComboAllowed", CoreInterfaces.Hit?hit0 * CoreInterfaces.Hit?hit1 ^-> T<bool>
-            ]
+            Required = []
+            Optional = TableRowsPropsFields
         }
 
     let TableRows =
@@ -121,17 +124,19 @@ module DaygridPlugin =
         ]
         |> Import "TableRows" "@fullcalendar/daygrid"
 
-    let TableProps =
-        Class "TableProps"
-        |=> Inherits TableRowsProps
-        |+> Pattern.RequiredFields [
-            "colGroupNode", Core.VNode
-            "tableMinWidth", Core.CssDimValue
-            "expandRows", T<bool>
-        ]
-        |+> Pattern.OptionalFields [
-            "headerAlignElRef", T<HTMLElement>
-        ]
+    let TableProps = 
+        Pattern.Config "TableProps" {
+            Required = []
+            Optional = (
+                [
+                    "colGroupNode", Core.VNode
+                    "tableMinWidth", Core.CssDimValue
+                    "expandRows", T<bool>
+                    "headerAlignElRef", T<HTMLElement>
+                ] @
+                TableRowsPropsFields
+            )
+        }
 
     let Table =
         Class "Table"

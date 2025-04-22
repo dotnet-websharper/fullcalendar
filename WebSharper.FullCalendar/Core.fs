@@ -19,6 +19,7 @@ module Core =
 
     let DateEnv = 
         Class "DateEnv" 
+        |> Import "DateEnv" "@fullcalendar/core"
 
     let CalendarImpl =
         Class "CalendarImpl"  
@@ -26,12 +27,14 @@ module Core =
 
     let EventImpl = 
         Class "EventImpl"
+        |> Import "EventImpl" "@fullcalendar/core"
 
     let EventSourceImpl = 
         Class "EventSourceImpl"
 
     let DateProfileGenerator =
         Class "DateProfileGenerator"
+        |> Import "DateProfileGenerator" "@fullcalendar/core"
 
     let Emitter =
         Generic - fun handlerFuncs ->
@@ -41,15 +44,22 @@ module Core =
             "on" => T<string>?``type`` * (handlerFuncs + T<obj>)?handler ^-> T<unit>
             "off" => T<string>?``type`` * !?(handlerFuncs + T<obj>)?handler ^-> T<unit>
         ]       
+        |> Import "Emitter" "@fullcalendar/core"
 
     let ViewImpl =
         Class "ViewImpl"
 
     let Theme =
         Class "Theme"
+        |> Import "Theme" "@fullcalendar/core"
 
     let ScrollResponder =
         Class "ScrollResponder"
+        |> Import "ScrollResponder" "@fullcalendar/core"
+
+    let NamedTimeZoneImpl =
+        Class "NamedTimeZoneImpl"
+        |> Import "NamedTimeZoneImpl" "@fullcalendar/core"
 
     module Enums = 
         // Enums
@@ -82,6 +92,7 @@ module Core =
 
         let OverflowValue =
             Pattern.EnumStrings "OverflowValue" [ "auto"; "hidden"; "scroll"; "visible" ]
+            |> Import "OverflowValue" "@fullcalendar/core"
 
         // Enums
 
@@ -93,9 +104,11 @@ module Core =
 
         let CalendarApi = 
             Class "CalendarApi"
+            |> Import "CalendarApi" "@fullcalendar/core"
 
         let EventApi = 
             Class "EventApi"
+            |> Import "EventApi" "@fullcalendar/core"
 
         let CalendarListenerRefiners = 
             Class "CalendarListenerRefiners"
@@ -111,6 +124,7 @@ module Core =
 
         let ViewContext =
             Class "ViewContext" 
+            |> Import "ViewContext" "@fullcalendar/core"
 
         let DateProfileGeneratorProps =
             Class "DateProfileGeneratorProps"
@@ -120,9 +134,11 @@ module Core =
 
         let CalendarData = 
             Class "CalendarData" 
+            |> Import "CalendarData" "@fullcalendar/core"
 
         let EventStore =
             Class "EventStore" 
+            |> Import "EventStore" "@fullcalendar/core"
 
         let DateRangeInput = 
             Pattern.Config "DateRangeInput" {
@@ -132,6 +148,7 @@ module Core =
                     "end", DateInput
                 ]
             }
+            |> Import "DateRangeInput" "@fullcalendar/core"
 
         let DurationObjectInput =
             Pattern.Config "DurationObjectInput" {
@@ -183,11 +200,11 @@ module Core =
 
         let ZonedMarker =
             Pattern.Config "ZonedMarker" {
-                Required = []
-                Optional = [
+                Required = [
                     "marker", DateMarker
                     "timeZoneOffset", T<int>
                 ]
+                Optional = []
             }
 
         let Week =
@@ -216,22 +233,15 @@ module Core =
             }
 
         let BaseOptions = 
-            //Generic - fun t ->
             Class "BaseOptions"
-            //|+> Pattern.OptionalFields [
-            //    "eventOrder", (FieldSpecInput t)?input ^-> !| OrderSpec.[t]
-            //]
             |> Import "BaseOptionRefiners" "@fullcalendar/core"
 
         let CalendarOptions = 
-            //Generic - fun t ->
             Class "CalendarOptions"
             |> Import "CalendarOptions" "@fullcalendar/core"
 
         let ViewOptions = 
-            //Generic - fun t ->
             Class "ViewOptions"
-            |=> Inherits BaseOptions
             |> Import "ViewOptionsRefined" "@fullcalendar/core"
 
         let ViewOptionsMap = Dictionary T<string> ViewOptions
@@ -318,20 +328,23 @@ module Core =
             ]
 
         let ExpandedZonedMarker =
-            Class "ExpandedZonedMarker" 
-            |=> Inherits ZonedMarker
-            |+> Pattern.RequiredFields [
-                "marker", DateMarker
-                "timeZoneOffset", T<int>
-                "array", T<int[]>
-                "year", T<int>
-                "month", T<int>
-                "day", T<int>
-                "hour", T<int>
-                "minute", T<int>
-                "second", T<int>
-                "millisecond", T<int>
-            ]
+            Pattern.Config "ExpandedZonedMarker" {
+                Required = []
+                Optional = [
+                    "array", T<int[]>
+                    "year", T<int>
+                    "month", T<int>
+                    "day", T<int>
+                    "hour", T<int>
+                    "minute", T<int>
+                    "second", T<int>
+                    "millisecond", T<int>
+
+                    // inherits ZonedMarker
+                    "marker", DateMarker
+                    "timeZoneOffset", T<int>
+                ]
+            }
 
         let VerboseFormattingArg =
             Pattern.Config "VerboseFormattingArg" {
@@ -345,6 +358,7 @@ module Core =
                     "defaultSeparator",T<string>
                 ]
             }
+            |> Import "VerboseFormattingArg" "@fullcalendar/core"
 
         let CmdFormatterFunc = T<string>?cmd * VerboseFormattingArg?arg ^-> T<string>
 
@@ -369,6 +383,7 @@ module Core =
                 "format" => ZonedMarker?date * DateFormattingContext?context ^-> T<string>
                 "formatRange" => (ZonedMarker?start * ZonedMarker?``end`` * DateFormattingContext?context * !?T<string>?betterDefaultSeparator) ^-> T<string>
             ]
+            |> Import "DateFormatter" "@fullcalendar/core"
 
         let NativeFormatterOptionsOptionalFields = [
             "week", E.WeekFormat.Type
@@ -413,7 +428,7 @@ module Core =
         let CreateFormatter = FormatterInput?input ^-> DateFormatter 
 
         let DragMetaRefiners = 
-            Pattern.Config "DragMetaInput" {
+            Pattern.Config "DragMetaRefiners" {
                 Required = []
                 Optional = [
                     "startTime", CreateDuration
@@ -490,50 +505,67 @@ module Core =
             }
             |> Import "ViewApi" "@fullcalendar/core"
 
+        let DateMetaFields = [
+            "dow", T<int>
+            "isDisabled", T<bool>
+            "isOther", T<bool>
+            "isToday", T<bool>
+            "isPast", T<bool>
+            "isFuture", T<bool>
+        ]
+
         let DateMeta = 
             Pattern.Config "DateMeta" {
-                Required = []
-                Optional = [
-                    "dow", T<int>
-                    "isDisabled", T<bool>
-                    "isOther", T<bool>
-                    "isToday", T<bool>
-                    "isPast", T<bool>
-                    "isFuture", T<bool>
-                ]
-            }            
+                Required = DateMetaFields
+                Optional = []
+            }         
+            
+        let DayHeaderContentArgFields = [
+            "date", T<Date>
+            "view", ViewApi.Type
+            "text", T<string>
+            "otherProp", T<obj[]>
+        ]
 
         let DayHeaderContentArg = 
-            Class "DayHeaderContentArg" 
-            |=> Inherits DateMeta
-            |+> Pattern.RequiredFields [
-                "date", T<Date>
-                "view", ViewApi.Type
-                "text", T<string>
-                "otherProp", T<obj[]>
-            ]
+            Pattern.Config "DayHeaderContentArg" {
+                Required = []
+                Optional = (
+                    DayHeaderContentArgFields @ 
+                    DateMetaFields // Inherits DateMeta
+                )
+            }
             |> Import "DayHeaderContentArg" "@fullcalendar/core"
 
+        let DayCellContentArgFields = [
+            "date", T<Date>
+            "view", ViewApi.Type
+            "dayNumberText", T<string>
+            "extraProp", T<obj[]>
+        ]
+
         let DayCellContentArg = 
-            Class "DayCellContentArg" 
-            |=> Inherits DateMeta
-            |+> Pattern.RequiredFields [
-                "date", T<Date>
-                "view", ViewApi.Type
-                "dayNumberText", T<string>
-                "extraProp", T<obj[]>
-            ]
+            Pattern.Config "DayCellContentArg" {
+                Required = []
+                Optional = (
+                    DayCellContentArgFields @ 
+                    DateMetaFields // Inherits DateMeta
+                )
+            }
             |> Import "DayCellContentArg" "@fullcalendar/core"
 
         let SlotLaneContentArg = 
-            Class "SlotLaneContentArg" 
-            |=> Inherits DateMeta
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "time", Duration.Type
-                "date", T<Date>
-                "view", ViewApi.Type
-            ]
+            Pattern.Config "SlotLaneContentArg" {
+                Required = []
+                Optional = (
+                    [
+                        "time", Duration.Type
+                        "date", T<Date>
+                        "view", ViewApi.Type
+                    ] @ 
+                    DateMetaFields // Inherits DateMeta
+                )
+            }
             |> Import "SlotLaneContentArg" "@fullcalendar/core"
 
         let SlotLabelContentArg = 
@@ -559,24 +591,22 @@ module Core =
             }
             |> Import "AllDayContentArg" "@fullcalendar/core"
 
+        let WeekNumberContentArgFields = [
+            "num", T<int>
+            "text", T<string>
+            "date", T<Date>
+        ]
+
         let WeekNumberContentArg = 
             Pattern.Config "WeekNumberContentArg" {
                 Required = []
-                Optional = [
-                    "num", T<int>
-                    "text", T<string>
-                    "date", T<Date>
-                ]
+                Optional = WeekNumberContentArgFields
             }
+            |> Import "WeekNumberContentArg" "@fullcalendar/core"
 
         let CustomContent = ComponentChildren + ObjCustomContent
 
         let WeekNumberCalculation = E.WeekNumberCalculationEnums + (T<Date>?m ^-> T<int>)
-
-        let ClassNamesGenerator (renderProps:CodeModel.Class) = ClassNamesInput + (renderProps?renderProps ^-> ClassNamesInput)
-        let CustomContentGenerator (renderProps:CodeModel.Class) = CustomContent + (renderProps?renderProps * T<obj>?createElement ^-> CustomContent + T<bool>)
-        let DidMountHandler (mountArg:CodeModel.Class) = mountArg?mountArg ^-> T<unit>
-        let WillUnmountHandler (mountArg:CodeModel.Class) = DidMountHandler mountArg
 
         let ViewContentArg = 
             Pattern.Config "ViewContentArg" {
@@ -596,13 +626,15 @@ module Core =
                     "view", ViewApi.Type
                 ]
             }
+            |> Import "NowIndicatorContentArg" "@fullcalendar/core"
 
         let LocaleInput = 
-            Class "LocaleInput"
-            |=> Inherits CalendarOptions
-            |+> Instance [
-                "code" =@ T<string>
-            ]           
+            Pattern.Config "LocaleInput" {
+                Required = [
+                    "code", T<string>
+                ]
+                Optional = []
+            }
             |> Import "LocaleInput" "@fullcalendar/core"
 
         let RangeApi =
@@ -638,29 +670,31 @@ module Core =
                 Optional = EventUiRefinersOptionalFields
             }
 
+        let EventContentArgFields = [
+            "event", EventImpl.Type
+            "timeText", T<string>
+            "backgroundColor", T<string>
+            "borderColor", T<string>
+            "textColor", T<string>
+            "isDraggable", T<bool>
+            "isStartResizable", T<bool>
+            "isEndResizable", T<bool>
+            "isMirror", T<bool>
+            "isStart", T<bool>
+            "isEnd", T<bool>
+            "isPast", T<bool>
+            "isFuture", T<bool>
+            "isToday", T<bool>
+            "isSelected", T<bool>
+            "isDragging", T<bool>
+            "isResizing", T<bool>
+            "view", ViewApi.Type
+        ]
+
         let EventContentArg = 
             Pattern.Config "EventContentArg" {
                 Required = []
-                Optional = [
-                    "event", EventImpl.Type
-                    "timeText", T<string>
-                    "backgroundColor", T<string>
-                    "borderColor", T<string>
-                    "textColor", T<string>
-                    "isDraggable", T<bool>
-                    "isStartResizable", T<bool>
-                    "isEndResizable", T<bool>
-                    "isMirror", T<bool>
-                    "isStart", T<bool>
-                    "isEnd", T<bool>
-                    "isPast", T<bool>
-                    "isFuture", T<bool>
-                    "isToday", T<bool>
-                    "isSelected", T<bool>
-                    "isDragging", T<bool>
-                    "isResizing", T<bool>
-                    "view", ViewApi.Type
-                ]
+                Optional = EventContentArgFields
             }
             |> Import "EventContentArg" "@fullcalendar/core"
 
@@ -668,83 +702,106 @@ module Core =
         let EventInput = EventUiInput + T<obj> + EventRefiners
 
         let DayHeaderMountArg = 
-            Class "DayHeaderMountArg"
-            |=> Inherits DayHeaderContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "DayHeaderMountArg" {
+                Required = []
+                Optional = (
+                    DayHeaderContentArgFields @ [
+                        "el", T<HTMLElement>
+                    ]
+                )
+            }
             |> Import "DayHeaderMountArg" "@fullcalendar/core"
 
         let DayCellMountArg = 
-            Class "DayCellMountArg"
-            |=> Inherits DayCellContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "DayCellMountArg" {
+                Required = []
+                Optional = (
+                    DayCellContentArgFields @ [
+                        "el", T<HTMLElement>
+                    ]
+                )
+            }
             |> Import "DayCellMountArg" "@fullcalendar/core"
 
         let WeekNumberMountArg = 
-            Class "WeekNumberMountArg"
-            |=> Inherits WeekNumberContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "WeekNumberMountArg" {
+                Required = []
+                Optional = (
+                    WeekNumberContentArgFields @ [
+                        "el", T<HTMLElement>
+                    ]
+                )
+            }
             |> Import "WeekNumberMountArg" "@fullcalendar/core"
 
         let ViewMountArg = 
-            Class "ViewMountArg"
-            |=> Inherits ViewContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "ViewMountArg" {
+                Required = []
+                Optional = [
+                    "el", T<HTMLElement>
+                    "view", ViewApi.Type
+                ]
+            }
             |> Import "ViewMountArg" "@fullcalendar/core"
 
         let NowIndicatorMountArg = 
-            Class "NowIndicatorMountArg"
-            |=> Inherits NowIndicatorContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "NowIndicatorMountArg" {
+                Required = []
+                Optional = [
+                    "el", T<HTMLElement>
+                    "isAxis", T<bool>
+                    "date", T<Date>
+                    "view", ViewApi.Type
+                ]
+            }
+            |> Import "NowIndicatorMountArg" "@fullcalendar/core"
 
         let EventMountArg = 
-            Class "EventMountArg"
-            |=> Inherits EventContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "EventMountArg" {
+                Required = []
+                Optional = (
+                    EventContentArgFields @ [
+                        "el", T<HTMLElement>
+                    ]
+                )
+            }
             |> Import "EventMountArg" "@fullcalendar/core"
 
         let SlotLaneMountArg = 
-            Class "SlotLaneMountArg"
-            |=> Inherits SlotLaneContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "SlotLaneMountArg" {
+                Required = []
+                Optional = [
+                    "el", T<HTMLElement>
+                    "time", Duration.Type
+                    "date", T<Date>
+                    "view", ViewApi.Type
+                ]
+            }
             |> Import "SlotLaneMountArg" "@fullcalendar/core"
 
         let SlotLabelMountArg = 
-            Class "SlotLabelMountArg"
-            |=> Inherits SlotLabelContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "SlotLabelMountArg" {
+                Required = []
+                Optional = [
+                    "el", T<HTMLElement>
+                    "level", T<int>
+                    "time", Duration.Type
+                    "date", T<Date>
+                    "view", ViewApi.Type
+                    "text", T<string>
+                ]
+            }
             |> Import "SlotLabelMountArg" "@fullcalendar/core"
 
         let AllDayMountArg = 
-            Class "AllDayMountArg"
-            |=> Inherits AllDayContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "AllDayMountArg" {
+                Required = []
+                Optional = [
+                    "el", T<HTMLElement>
+                    "view", ViewApi.Type
+                    "text", T<string>
+                ]
+            }
             |> Import "AllDayMountArg" "@fullcalendar/core"
 
         let ParsedMarkerResult = 
@@ -765,8 +822,7 @@ module Core =
                 Optional = []
             }
 
-        let NamedTimeZoneImpl =
-            Class "NamedTimeZoneImpl"
+        NamedTimeZoneImpl
             |+> Instance [
                 "timeZoneName" =@ T<string>
                 "offsetForArray" => T<float[]>?array ^-> T<int>
@@ -775,6 +831,7 @@ module Core =
             |+> Static [
                 Constructor (T<string>?timeZoneName)
             ]
+            |> ignore            
 
         let NamedTimeZoneImplClass =
             Class "NamedTimeZoneImplClass"
@@ -836,18 +893,33 @@ module Core =
             }
 
         let RangeApiWithTimeZone = 
-            Class "RangeApiWithTimeZone"
-            |=> Inherits RangeApi
-            |+> Pattern.RequiredFields [
-                "timeZone", T<string>
-            ]
+            Pattern.Config "RangeApiWithTimeZone" {
+                Required = []
+                Optional = [
+                    "timeZone", T<string>
+
+                    // Inherits RangeApi
+                    "start", T<Date>
+                    "end", T<Date>
+                    "startStr", T<string>
+                    "endStr", T<string>
+                ]
+            }
 
         let DatesSetArg = 
-            Class "DatesSetArg"
-            |=> Inherits RangeApiWithTimeZone
-            |+> Pattern.RequiredFields [
-                "view", ViewApi.Type
-            ]
+            Pattern.Config "DatesSetArg" {
+                Required = []
+                Optional = [
+                    "view", ViewApi.Type
+
+                    // Inherits RangeApiWithTimeZone
+                    "start", T<Date>
+                    "end", T<Date>
+                    "startStr", T<string>
+                    "endStr", T<string>
+                    "timeZone", T<string>
+                ]
+            }
             |> Import "DatesSetArg" "@fullcalendar/core"
 
         let EventAddArg =
@@ -920,13 +992,17 @@ module Core =
             }
             |> Import "EventHoveringArg" "@fullcalendar/core"
 
-        let DateSelectArg =
-            Class "DateSelectArg"
-            |=> Inherits DateSpanApi
-            |+> Pattern.RequiredFields [
-                "jsEvent", !?T<Dom.MouseEvent> 
-                "view", ViewApi.Type
-            ]
+        let DateSelectArg = 
+            Pattern.Config "DateSelectArg" {
+                Required = []
+                Optional = [
+                    "jsEvent", !?T<Dom.MouseEvent>
+                    "view", ViewApi.Type
+
+                    // Inherits DateSpanApi
+                    "allDay", T<bool>
+                ]
+            }
             |> Import "DateSelectArg" "@fullcalendar/core"
 
         let DateUnselectArg =
@@ -958,6 +1034,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "DateRange" "@fullcalendar/core"
 
         let DateProfile =
             Pattern.Config "DateProfile" {
@@ -977,6 +1054,7 @@ module Core =
                     "activeRange", !?DateRange.Type
                 ]
             }
+            |> Import "DateProfile" "@fullcalendar/core"
 
         let RecurringDef =
             Pattern.Config "RecurringDef" {
@@ -1007,6 +1085,7 @@ module Core =
                     "allows", !| AllowFunc
                 ]
             }
+            |> Import "EventUi" "@fullcalendar/core"
 
         let EventUiHash = !| (Dictionary T<string> EventUi.Type)
 
@@ -1088,12 +1167,16 @@ module Core =
                 ]
             }
 
-        let DateSpan =
-            Class "DateSpan" 
-            |=> Inherits OpenDateSpan
-            |+> Pattern.RequiredFields [
-                "range", DateRange.Type
-            ]
+        let DateSpan = 
+            Pattern.Config "DateSpan" {
+                Required = []
+                Optional = [
+                    "allDay", T<bool>
+                    "range", DateRange.Type
+                    "otherProp", T<obj[]>
+                ]
+            }
+            |> Import "DateSpan" "@fullcalendar/core"
 
         let EventInteractionState =
             Pattern.Config "EventInteractionState" {
@@ -1104,8 +1187,9 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "EventInteractionState" "@fullcalendar/core"
 
-        let CalendarDataManagerStateRequiredFields = [
+        let CalendarDataManagerStateFields = [
             "dynamicOptionOverrides", CalendarOptions.Type
             "currentViewType", T<string>
             "currentDate", DateMarker
@@ -1117,9 +1201,6 @@ module Core =
             "renderableEventStore", EventStore.Type
             "eventSelection", T<string>
             "selectionConfig", EventUi.Type
-        ]
-
-        let CalendarDataManagerStateOptionalFields = [
             "dateSelection", DateSpan.Type
             "eventDrag", EventInteractionState.Type
             "eventResize", EventInteractionState.Type
@@ -1127,27 +1208,29 @@ module Core =
 
         let CalendarDataManagerState =
             Pattern.Config "CalendarDataManagerState" {
-                Required = CalendarDataManagerStateRequiredFields
-                Optional = CalendarDataManagerStateOptionalFields
-            }                
+                Required = []
+                Optional = CalendarDataManagerStateFields
+            }      
+            
+        let ViewPropsFields = [
+            "dateProfile", DateProfile.Type
+            "businessHours", EventStore.Type
+            "eventStore", EventStore.Type
+            "eventUiBases", EventUiHash
+            "eventSelection", T<string>
+            "isHeightAuto", T<bool>
+            "forPrint", T<bool>
+            "dateSelection", DateSpan.Type
+            "eventDrag", EventInteractionState.Type
+            "eventResize", EventInteractionState.Type
+        ]
 
         let ViewProps =
             Pattern.Config "ViewProps" {
-                Required = [
-                    "dateProfile", DateProfile.Type
-                    "businessHours", EventStore.Type
-                    "eventStore", EventStore.Type
-                    "eventUiBases", EventUiHash
-                    "eventSelection", T<string>
-                    "isHeightAuto", T<bool>
-                    "forPrint", T<bool>
-                ]
-                Optional = [
-                    "dateSelection", DateSpan.Type
-                    "eventDrag", EventInteractionState.Type
-                    "eventResize", EventInteractionState.Type
-                ]
+                Required = []
+                Optional = ViewPropsFields
             }
+            |> Import "ViewProps" "@fullcalendar/core"
 
         let ViewComponentType = ViewProps.Type + T<obj>
 
@@ -1170,10 +1253,11 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "ViewSpec" "@fullcalendar/core"
 
         let ViewSpecHash = !| (Dictionary T<string> ViewSpec)
 
-        let CalendarOptionsDataRequiredFields = [
+        let CalendarOptionsDataFields = [
             "localeDefaults", CalendarOptions.Type
             "calendarOptions", CalendarOptionsRefined.Type
             "toolbarConfig", T<obj>
@@ -1186,8 +1270,8 @@ module Core =
 
         let CalendarOptionsData =
             Pattern.Config "CalendarOptionsData" {
-                Required = CalendarOptionsDataRequiredFields
-                Optional = []
+                Required = []
+                Optional = CalendarOptionsDataFields
             }
 
         let ViewOptionsRefined = ViewOptions
@@ -1220,13 +1304,27 @@ module Core =
                 Optional = []
             }
 
+        let DateProfileOptionsOptionalFields = [
+            "slotMinTime", Duration.Type
+            "slotMaxTime", Duration.Type
+            "showNonCurrentDates", T<bool>
+            "dayCount", T<int>
+            "dateAlignment", T<string>
+            "dateIncrement", Duration.Type
+            "hiddenDays", !| T<int>
+            "weekends", T<bool>
+            "nowInput", DateInput + (T<unit> ^-> DateInput)
+            "validRangeInput", DateRangeInput + (CalendarImpl * T<Date> ^-> DateRangeInput)
+            "visibleRangeInput", DateRangeInput + (CalendarImpl * T<Date> ^-> DateRangeInput)
+            "fixedWeekCount", T<bool>
+        ]
+
         let DateProfileOptions =
             Pattern.Config "DateProfileOptions" {
-                Required = [
+                Required = []
+                Optional = [
                     "slotMinTime", Duration.Type
                     "slotMaxTime", Duration.Type
-                ]
-                Optional = [
                     "showNonCurrentDates", T<bool>
                     "dayCount", T<int>
                     "dateAlignment", T<string>
@@ -1246,7 +1344,7 @@ module Core =
                 Constructor (DateProfileGeneratorProps?props ^-> DateProfileGenerator)
             ]
 
-        let CalendarCurrentViewDataRequiredFields = [
+        let CalendarCurrentViewDataFields = [
             "viewSpec", ViewSpec.Type
             "options", ViewOptionsRefined.Type
             "viewApi", ViewImpl.Type
@@ -1255,17 +1353,19 @@ module Core =
 
         let CalendarCurrentViewData =
             Pattern.Config "CalendarCurrentViewData" {
-                Required = CalendarCurrentViewDataRequiredFields
-                Optional = []
+                Required = []
+                Optional = CalendarCurrentViewDataFields
             }
 
-        let CalendarDataBase =
-            Class "CalendarDataBase"
-            |=> Inherits CalendarDataManagerState
-            |+> Pattern.RequiredFields (
-                CalendarOptionsDataRequiredFields @
-                CalendarCurrentViewDataRequiredFields
-            )
+        let CalendarDataBase = 
+            Pattern.Config "CalendarDataBase" {
+                Required = []
+                Optional = (
+                    CalendarOptionsDataFields @
+                    CalendarCurrentViewDataFields @
+                    CalendarDataManagerStateFields
+                )
+            }
 
         let CalendarContextOptionalFields = [
             "dateEnv", DateEnv.Type
@@ -1278,23 +1378,26 @@ module Core =
         ]
 
         let CalendarContext = 
-            //Generic - fun t ->
             Pattern.Config "CalendarContext" {
                 Required = []
-                Optional = (CalendarContextOptionalFields )
+                Optional = CalendarContextOptionalFields
             }
+            |> Import "CalendarContext" "@fullcalendar/core"
 
         let LocaleSingularArg = LocaleCodeArg + LocaleInput
             
         let BusinessHoursInput = T<bool> + EventInput + !|EventInput
         let OverlapFunc = EventImpl?stillEvent * EventImpl?movingEvent ^-> T<bool>
         let ConstraintInput = T<string> + EventInput + !|EventInput  
+
         let ReducerFuncContext = 
-            //Generic - fun t ->
-            Class "ReducerFuncContext"
-            |=> Inherits CalendarDataManagerState
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields (CalendarContextOptionalFields )     
+            Pattern.Config "ReducerFuncContext" {
+                Required = []
+                Optional = (
+                    CalendarContextOptionalFields @
+                    CalendarDataManagerStateFields // Inherits CalendarDataManagerState
+                )
+            }
 
         let ReducerFunc = (DictionaryObj)?currentState * T<obj>?action * ReducerFuncContext?context ^-> DictionaryObj
 
@@ -1303,8 +1406,24 @@ module Core =
         let EventUiRefined = EventUiRefiners
 
         let EventRefined = 
-            Class "EventRefined"
-            |=> Inherits EventRefiners
+            Pattern.Config "EventRefined" {
+                Required = []
+                Optional = (
+                    [
+                        // Inherits EventRefiners
+                        "extendedProps", DictionaryObj
+                        "start", DateInput
+                        "end", DateInput
+                        "date", DateInput
+                        "allDay", T<bool>
+                        "id", T<string>
+                        "groupId", T<string>
+                        "title", T<string>
+                        "url", T<string>
+                        "interactive", T<bool>
+                    ] @ EventUiRefinersOptionalFields
+                )
+            }
             |> Import "EventRefined" "@fullcalendar/core"
 
         let EventDefMemberAdder = (EventRefined?refined) ^-> EventDef
@@ -1322,6 +1441,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "PointerDragEvent" "@fullcalendar/core"
 
         let EventMutation =
             Pattern.Config "EventMutation" {
@@ -1334,6 +1454,7 @@ module Core =
                     "extendedProps", T<obj>
                 ]
             }
+            |> Import "EventMutation" "@fullcalendar/core"
 
         let Rect =
             Pattern.Config "Rect" {
@@ -1345,6 +1466,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "Rect" "@fullcalendar/core"
 
         let ScrollRequest =
             Pattern.Config "ScrollRequest" {
@@ -1354,6 +1476,7 @@ module Core =
                     "otherProp", T<obj[]>
                 ]
             }
+            |> Import "ScrollRequest" "@fullcalendar/core"
 
         let ResizeHandler = T<bool>?force ^-> T<unit>
         let ScrollRequestHandler = ScrollRequest?request ^-> T<bool>
@@ -1373,6 +1496,7 @@ module Core =
                     "largeUnit", T<string>
                 ]
             }
+            |> Import "Hit" "@fullcalendar/core"
 
         let EqualityFunc t = t?a * t?b ^-> T<bool>
         let EqualityThing t = EqualityFunc t + T<bool>
@@ -1397,33 +1521,35 @@ module Core =
 
         let BaseComponent =
             Generic -- fun props state ->
-                Class "BaseComponent"
-                |=> Inherits PureComponent.[props, state]
-                |+> Static [
-                    "contextType" =@ T<obj>
-                ]
-                |+> Instance [
-                    "context" =@ ViewContext
-                ]
+            Class "BaseComponent"
+            |=> Inherits PureComponent.[props, state]
+            |+> Static [
+                "contextType" =@ T<obj>
+            ]
+            |+> Instance [
+                "context" =@ ViewContext
+            ]
+            |> Import "BaseComponent" "@fullcalendar/core"
 
         let DateComponent =
             Generic -- fun props state ->
-                Class "DateComponent"
-                |=> Inherits BaseComponent.[props, state]
-                |+> Instance [
-                    "uid" =@ T<string>
+            Class "DateComponent"
+            |=> Inherits BaseComponent.[props, state]
+            |+> Instance [
+                "uid" =@ T<string>
 
-                    "prepareHits" => T<unit> ^-> T<unit>
-                    "queryHit" =>
-                        T<float>?positionLeft *
-                        T<float>?positionTop *
-                        T<float>?elWidth *
-                        T<float>?elHeight
-                        ^-> !?Hit
+                "prepareHits" => T<unit> ^-> T<unit>
+                "queryHit" =>
+                    T<float>?positionLeft *
+                    T<float>?positionTop *
+                    T<float>?elWidth *
+                    T<float>?elHeight
+                    ^-> !?Hit
 
-                    "isValidSegDownEl" => T<HTMLElement>?el ^-> T<bool>
-                    "isValidDateDownEl" => T<HTMLElement>?el ^-> T<bool>
-                ]
+                "isValidSegDownEl" => T<HTMLElement>?el ^-> T<bool>
+                "isValidDateDownEl" => T<HTMLElement>?el ^-> T<bool>
+            ]
+            |> Import "DateComponent" "@fullcalendar/core"
 
         let InteractionSettingsInput =
             Pattern.Config "InteractionSettingsInput" {
@@ -1435,6 +1561,7 @@ module Core =
                     "isHitComboAllowed", (Hit?hit0 * Hit?hit1 ^-> T<bool>)
                 ]
             }
+            |> Import "InteractionSettings" "@fullcalendar/core"
 
         let EventDragMutationMassager = EventMutation?mutation * Hit?hit0 * Hit?hit1 ^-> T<unit>
         let EventDropTransformer = EventMutation?mutation * CalendarContext?context ^-> DictionaryObj
@@ -1446,33 +1573,54 @@ module Core =
         let ViewConfigInputHash = Dictionary T<string> ViewConfigInput
 
         let SpecificViewContentArg =
-            Class "SpecificViewContentArg"
-            |=> Inherits ViewProps
-            |+> Pattern.RequiredFields [
-                "nextDayThreshold", Duration.Type
-            ]
+            Pattern.Config "SpecificViewContentArg" {
+                Required = []
+                Optional = [
+                    "nextDayThreshold", Duration.Type
+                ] @ ViewPropsFields // Inherits ViewProps
+            }
             |> Import "SpecificViewContentArg" "@fullcalendar/core"
 
         let SpecificViewMountArg =
-            Class "SpecificViewMountArg"
-            |=> Inherits SpecificViewContentArg
-            |+> Pattern.RequiredFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "SpecificViewMountArg" {
+                Required = []
+                Optional = [
+                    "nextDayThreshold", Duration.Type
+                    "el", T<HTMLElement>
+                ] @ ViewPropsFields // Inherits ViewProps
+            }
+
+        let CalendarDataFields = [
+            "viewTitle", T<string>
+            "calendarApi", CalendarImpl.Type
+            "dispatch", T<obj>?action ^-> T<unit>
+            "emitter", Emitter.[CalendarListeners]
+            "getCurrentData", T<unit> ^-> TSelf
+        ]
 
         let CalendarContentProps =
-            Class "CalendarContentProps"
-            |=> Inherits CalendarData
-            |+> Pattern.RequiredFields [
-                "forPrint", T<bool>
-                "isHeightAuto", T<bool>
-            ]
+            Pattern.Config "CalendarContentProps" {
+                Required = []
+                Optional = (
+                    [
+                        "forPrint", T<bool>
+                        "isHeightAuto", T<bool>
+                    ] @
+                    // Inherits CalendarData
+                    CalendarDataManagerStateFields @
+                    CalendarDataFields @
+                    CalendarOptionsDataFields @
+                    CalendarCurrentViewDataFields
+                )
+            }
+            |> Import "CalendarContentProps" "@fullcalendar/core"
 
         let ViewPropsTransformer =
             Class "ViewPropsTransformer"
             |+> Instance [
                 "transform" => ViewProps?viewProps * CalendarContentProps?calendarProps ^-> T<obj>
             ]
+            |> Import "ViewPropsTransformer" "@fullcalendar/core"
 
         let ViewPropsTransformerClass = 
             Class "ViewPropsTransformerClass"
@@ -1494,6 +1642,7 @@ module Core =
                     "eventResize", EventInteractionState.Type
                 ]
             }
+            |> Import "SplittableProps" "@fullcalendar/core"
 
         let IsPropsValidTester = SplittableProps?props * CalendarContext?context ^-> T<bool>
 
@@ -1509,6 +1658,7 @@ module Core =
                     "duration", Duration.Type
                 ]
             }
+            |> Import "DragMeta" "@fullcalendar/core"
 
         let ExternalDefTransform = DateSpan?dateSpan * DragMeta?dragMeta ^-> T<obj>
 
@@ -1537,6 +1687,7 @@ module Core =
             |+> Static [
                 Constructor (InteractionSettings?settings)
             ]
+            |> Import "Interaction" "@fullcalendar/core"
 
         let InteractionClass =
             Class "InteractionClass"
@@ -1569,6 +1720,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "EventSourceFuncArg" "@fullcalendar/core"
 
         let EventSourceFunc =
 
@@ -1600,12 +1752,16 @@ module Core =
                 Required = []
                 Optional = EventSourceRefinersOptionalFields
             }
+            |> Import "EventSourceRefiners" "@fullcalendar/core"
 
         let EventSourceInputObject = 
-            Class "EventSourceInputObject"
-            |=> Inherits EventUiInput
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields EventSourceRefinersOptionalFields
+            Pattern.Config "EventSourceInputObject" {
+                Required = []
+                Optional = (
+                    EventSourceRefinersOptionalFields @
+                    EventUiRefinersOptionalFields // inherits EventUiRefiners
+                )
+            }
 
         let EventSourceInput = EventSourceInputObject + !| EventInput + EventSourceFunc
 
@@ -1619,6 +1775,7 @@ module Core =
         ]
 
         let CalendarOptionRefiners =
+            Generic - fun t ->
             Pattern.Config "CalendarOptionRefiners" {
                 Required = []
                 Optional = CalendarOptionRefinersOptionalFields @ [
@@ -1627,10 +1784,14 @@ module Core =
             }
 
         let EventSourceRefined = 
-            Class "EventSourceRefined"
-            |=> Inherits EventUiRefined
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields EventSourceRefinersOptionalFields
+            Pattern.Config "EventSourceRefined" {
+                Required = []
+                Optional = (
+                    EventSourceRefinersOptionalFields @
+                    EventUiRefinersOptionalFields // Inherits EventUiRefined
+                )
+            }
+            |> Import "EventSourceRefined" "@fullcalendar/core"
 
         let EventSourceFetchArg =
             Generic - fun meta ->
@@ -1663,15 +1824,16 @@ module Core =
 
         let EventSourceDef =
             Generic - fun meta ->
-                Pattern.Config "EventSourceDef" {
-                    Required = [
-                        "parseMeta", EventSourceRefined?refined ^-> !?meta
-                        "fetch", EventSourceFetcher meta
-                    ]
-                    Optional = [
-                        "ignoreRange", T<bool>
-                    ]
-                }
+            Pattern.Config "EventSourceDef" {
+                Required = [
+                    "parseMeta", EventSourceRefined?refined ^-> !?meta
+                    "fetch", EventSourceFetcher meta
+                ]
+                Optional = [
+                    "ignoreRange", T<bool>
+                ]
+            }
+            |> Import "EventSourceDef" "@fullcalendar/core"
 
         let ParsedRecurring = 
             Generic - fun recurringData ->
@@ -1687,13 +1849,14 @@ module Core =
 
         let RecurringType =
             Generic - fun recurringData ->
-                Pattern.Config "RecurringType" {
-                    Required = [
-                        "parse", EventRefined?refined * DateEnv?dateEnv ^-> !?ParsedRecurring.[recurringData]
-                        "expand", T<obj>?typeData * DateRange?framingRange * DateEnv?dateEnv ^-> !| DateMarker
-                    ]
-                    Optional = []
-                }
+            Pattern.Config "RecurringType" {
+                Required = [
+                    "parse", EventRefined?refined * DateEnv?dateEnv ^-> !?ParsedRecurring.[recurringData]
+                    "expand", T<obj>?typeData * DateRange?framingRange * DateEnv?dateEnv ^-> !| DateMarker
+                ]
+                Optional = []
+            }
+            |> Import "RecurringType" "@fullcalendar/core"
 
         let ChunkContentCallbackArgs =
             Pattern.Config "ChunkContentCallbackArgs" {
@@ -1710,6 +1873,7 @@ module Core =
                     "clientHeight", T<int>
                 ]
             }
+            |> Import "ChunkContentCallbackArgs" "@fullcalendar/core"
 
         let OptionChangeHandler = T<obj>?propValue * CalendarContext?context ^-> T<unit>
         let OptionChangeHandlerMap = Dictionary T<string> OptionChangeHandler
@@ -1717,33 +1881,36 @@ module Core =
         let ChunkConfigContent = ChunkContentCallbackArgs?contentProps ^-> VNode
         let ChunkConfigRowContent = VNode + ChunkConfigContent
 
+        let SectionConfigOptionalFields = [
+            "type", T<string>
+            "outerContent", VNode
+            "className", T<string>
+            "maxHeight", T<int>
+            "liquid", T<bool>
+            "expandRows", T<bool>
+            "syncRowHeights", T<bool>
+            "isSticky", T<bool>
+        ]
+
         let SectionConfig =
             Pattern.Config "SectionConfig" {
-                Required = [
-                    "type", T<string>
-                ]
-                Optional = [
-                    "outerContent", VNode
-                    "className", T<string>
-                    "maxHeight", T<int>
-                    "liquid", T<bool>
-                    "expandRows", T<bool>
-                    "syncRowHeights", T<bool>
-                    "isSticky", T<bool>
-                ]
+                Required = []
+                Optional = SectionConfigOptionalFields
             }
+
+        let ChunkConfigOptionalFields = [
+            "elRef", T<obj>
+            "outerContent", VNode
+            "content", ChunkConfigContent
+            "rowContent", ChunkConfigRowContent
+            "scrollerElRef", T<obj>
+            "tableClassName", T<string>
+        ]
 
         let ChunkConfig =
             Pattern.Config "ChunkConfig" {
                 Required = []
-                Optional = [
-                    "elRef", T<obj>
-                    "outerContent", VNode
-                    "content", ChunkConfigContent
-                    "rowContent", ChunkConfigRowContent
-                    "scrollerElRef", T<obj>
-                    "tableClassName", T<string>
-                ]
+                Optional = ChunkConfigOptionalFields
             }
 
         let ColProps =
@@ -1755,23 +1922,28 @@ module Core =
                     "span", T<int>
                 ]
             }
+            |> Import "ColProps" "@fullcalendar/core"
 
-        let ScrollGridChunkConfig =
-            Class "ScrollGridChunkConfig"
-            |=> Inherits ChunkConfig
-            |+> Pattern.RequiredFields [
-                "key", T<string>
-            ]
+        let ScrollGridChunkConfig = 
+            Pattern.Config "ScrollGridChunkConfig" {
+                Required = [
+                    "key", T<string>
+                ]
+                Optional = ChunkConfigOptionalFields // Inherits ChunkConfig
+            }
+            |> Import "ScrollGridChunkConfig" "@fullcalendar/core"
 
-        let ScrollGridSectionConfig =
-            Class "ScrollGridSectionConfig"
-            |=> Inherits SectionConfig
-            |+> Pattern.RequiredFields [
-                "key", T<string>
-            ]
-            |+> Pattern.OptionalFields [
-                "chunks", !| ScrollGridChunkConfig
-            ]            
+        let ScrollGridSectionConfig = 
+            Pattern.Config "ScrollGridSectionConfig" {
+                Required = [
+                    "key", T<string>
+                ]
+                Optional = (
+                    [ "chunks", !| ScrollGridChunkConfig ] @
+                    SectionConfigOptionalFields // Inherits SectionConfig
+                )
+            }
+            |> Import "ScrollGridSectionConfig" "@fullcalendar/core"
 
         let ColGroupConfig =
             Pattern.Config "ColGroupConfig" {
@@ -1782,6 +1954,7 @@ module Core =
                     "width", CssDimValue
                 ]
             }
+            |> Import "ColGroupConfig" "@fullcalendar/core"
 
         let ScrollGridProps =
             Pattern.Config "ScrollGridProps" {
@@ -1796,6 +1969,7 @@ module Core =
                     "colGroups", !| ColGroupConfig
                 ]
             }
+            |> Import "ScrollGridProps" "@fullcalendar/core"
 
         let ScrollGridImpl =
             Class "ScrollGridImpl" 
@@ -1818,6 +1992,7 @@ module Core =
                 "setMirrorNeedsRevert" => T<bool>?value ^-> T<unit>
                 "setAutoScrollEnabled" => T<bool>?value ^-> T<unit>
             ]
+            |> Import "ElementDragging" "@fullcalendar/core"
 
         let ElementDraggingClass =
             Class "ElementDraggingClass"
@@ -1870,23 +2045,29 @@ module Core =
             |> Import "MoreLinkContentArg" "@fullcalendar/core"
 
         let MoreLinkMountArg = 
-            Class "MoreLinkMountArg"
-            |=> Inherits MoreLinkContentArg
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "el", T<HTMLElement>
-            ]
+            Pattern.Config "MoreLinkMountArg" {
+                Required = []
+                Optional = [
+                    "el", T<HTMLElement>
+                    // Inherits MoreLinkContentArg
+                    "num", T<int>
+                    "text", T<string>
+                    "shortText", T<string>
+                    "view", ViewApi.Type
+                ]
+            }
             |> Import "MoreLinkMountArg" "@fullcalendar/core"
 
         let ElRef = T<HTMLElement> + T<obj>
 
-        let ElAttrs =
-            Class "ElAttrs" 
-            |=> Inherits DictionaryObj
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "ref", ElRef
-            ]
+        let ElAttrs = 
+            Pattern.Config "ElAttrs" {
+                Required = []
+                Optional = [
+                    "ref", ElRef
+                ]
+            }
+
         let ElAttrsType = ElAttrs + T<obj>
 
         let ElAttrsPropsOptionalFields = [
@@ -1902,26 +2083,31 @@ module Core =
                 Optional = ElAttrsPropsOptionalFields
             }
 
-        let ElProps =
-            Class "ElProps" 
-            |=> Inherits ElAttrsProps
-            |+> Pattern.RequiredFields [
-                "elTag", T<string>
-            ]
+        let ElProps = 
+            Pattern.Config "ElProps" {
+                Required = [
+                    "elTag", T<string>
+                ]
+                Optional = ElAttrsPropsOptionalFields // inherits ElAttrsProps
+            }
+            |> Import "ElProps" "@fullcalendar/core"
 
-        let CustomRendering =
+        let CustomRendering = 
             Generic - fun t ->
-            Class "CustomRendering" 
-            |=> Inherits ElProps
-            |+> Pattern.RequiredFields [
-                "id", T<string>
-                "isActive", T<bool>
-                "containerEl", T<HTMLElement>
-                "reportNewContainerEl", (!?T<HTMLElement>?el ^-> T<unit>)
-                "generatorName", T<string>
-                "generatorMeta", T<obj>
-                "renderProps", t.Type
-            ]
+            Pattern.Config "CustomRendering" {
+                Required = []
+                Optional = [
+                    "id", T<string>
+                    "isActive", T<bool>
+                    "containerEl", T<HTMLElement>
+                    "reportNewContainerEl", (!?T<HTMLElement>?el ^-> T<unit>)
+                    "generatorName", T<string>
+                    "generatorMeta", T<obj>
+                    "renderProps", t.Type
+                    // Inherits ElProps
+                    "elTag", T<string>
+                ] @ ElAttrsPropsOptionalFields // Inherits ElProps
+            }
 
         let CustomRenderingHandler (t:Type.Type) = CustomRendering.[t]?customRender ^-> T<unit>
 
@@ -2025,7 +2211,34 @@ module Core =
             ]
             |> Import "EventSourceApi" "@fullcalendar/core"
 
+        // createFalsableFormatter from List plugin
+        let createFalsableFormatter = (FormatterInput + T<bool>)?input ^-> DateFormatter
+
+        let NoEventsContentArgRequiredFields = [
+            "text", T<string>
+            "view", ViewApi.Type
+        ]
+
+        // NoEventsContentArg from List plugin
+        let NoEventsContentArg =
+            Pattern.Config "NoEventsContentArg" {
+                Required = NoEventsContentArgRequiredFields
+                Optional = []
+            }
+            |> Import "NoEventsContentArg" "@fullcalendar/list"
+
+        // NoEventsMountArg from List plugin
+        let NoEventsMountArg = 
+            Pattern.Config "NoEventsMountArg" {
+                Required = NoEventsContentArgRequiredFields @ [
+                    "el", T<HTMLElement>
+                ]
+                Optional = []
+            }
+            |> Import "NoEventsMountArg" "@fullcalendar/list"
+
         let BaseOptionsOptionalFields = [
+            // Base options
             "navLinkDayClick", T<string> + (CalendarApi?this * T<Date>?date * T<Dom.UIEvent>?jsEvent ^-> T<unit>)
             "navLinkWeekClick", T<string> + (CalendarApi?this * T<Date>?weekStart * T<Dom.UIEvent>?jsEvent ^-> T<unit>)
             "duration", CreateDuration
@@ -2049,32 +2262,32 @@ module Core =
             "forceEventDuration", T<bool>
             "dayHeaders", T<bool>
             "dayHeaderFormat", CreateFormatter
-            "dayHeaderClassNames", ClassNamesGenerator DayHeaderContentArg
-            "dayHeaderContent", CustomContentGenerator DayHeaderContentArg
-            "dayHeaderDidMount", DidMountHandler DayHeaderMountArg
-            "dayHeaderWillUnmount", WillUnmountHandler  DayHeaderMountArg
-            "dayCellClassNames", ClassNamesGenerator DayCellContentArg
-            "dayCellContent", CustomContentGenerator DayCellContentArg
-            "dayCellDidMount", DidMountHandler  DayCellMountArg
-            "dayCellWillUnmount", WillUnmountHandler  DayCellMountArg
+            "dayHeaderClassNames", DayHeaderContentArg.Type
+            "dayHeaderContent", DayHeaderContentArg.Type
+            "dayHeaderDidMount", DayHeaderMountArg.Type
+            "dayHeaderWillUnmount", DayHeaderMountArg.Type
+            "dayCellClassNames",  DayCellContentArg.Type
+            "dayCellContent", DayCellContentArg.Type
+            "dayCellDidMount",  DayCellMountArg.Type
+            "dayCellWillUnmount", DayCellMountArg.Type
             "initialView", T<string>
             "aspectRatio", T<float>
             "weekends", T<bool>
             "weekNumberCalculation", WeekNumberCalculation
             "weekNumbers", T<bool>
-            "weekNumberClassNames", ClassNamesGenerator WeekNumberContentArg
-            "weekNumberContent", CustomContentGenerator WeekNumberContentArg
-            "weekNumberDidMount", DidMountHandler  WeekNumberMountArg
-            "weekNumberWillUnmount", WillUnmountHandler  WeekNumberMountArg
+            "weekNumberClassNames", WeekNumberContentArg.Type
+            "weekNumberContent", WeekNumberContentArg.Type
+            "weekNumberDidMount",  WeekNumberMountArg.Type
+            "weekNumberWillUnmount", WeekNumberMountArg.Type
             "editable", T<bool>
-            "viewClassNames", ClassNamesGenerator ViewContentArg
-            "viewDidMount", DidMountHandler  ViewMountArg
-            "viewWillUnmount", WillUnmountHandler  ViewMountArg
+            "viewClassNames", ViewContentArg.Type
+            "viewDidMount", ViewMountArg.Type
+            "viewWillUnmount", ViewMountArg.Type
             "nowIndicator", T<bool>
-            "nowIndicatorClassNames", ClassNamesGenerator NowIndicatorContentArg
-            "nowIndicatorContent", CustomContentGenerator NowIndicatorContentArg
-            "nowIndicatorDidMount", DidMountHandler  NowIndicatorMountArg
-            "nowIndicatorWillUnmount", WillUnmountHandler  NowIndicatorMountArg
+            "nowIndicatorClassNames", NowIndicatorContentArg.Type
+            "nowIndicatorContent", NowIndicatorContentArg.Type
+            "nowIndicatorDidMount",  NowIndicatorMountArg.Type
+            "nowIndicatorWillUnmount", NowIndicatorMountArg.Type
             "showNonCurrentDates", T<bool>
             "lazyFetching", T<bool>
             "startParam", T<string>
@@ -2089,6 +2302,7 @@ module Core =
             "allDayMaintainDuration", T<bool>
             "unselectAuto", T<bool>
             "dropAccept", T<string> + (CalendarApi?this * T<obj>?draggable ^-> T<bool>) 
+            "eventOrder", T<string> + T<string[]> + T<obj>
             "eventOrderStrict", T<bool>
             "handleWindowResize", T<bool>
             "windowResizeDelay", T<int>
@@ -2125,33 +2339,33 @@ module Core =
             "eventBorderColor", T<string>
             "eventTextColor", T<string>
             "eventColor", T<string>
-            "eventClassNames", ClassNamesGenerator EventContentArg
-            "eventContent", CustomContentGenerator EventContentArg
-            "eventDidMount", DidMountHandler  EventMountArg
-            "eventWillUnmount", WillUnmountHandler  EventMountArg
+            "eventClassNames", EventContentArg.Type
+            "eventContent", EventContentArg.Type
+            "eventDidMount",  EventMountArg.Type
+            "eventWillUnmount", EventMountArg.Type
             "selectConstraint", ConstraintInput
             "selectOverlap", T<bool> + OverlapFunc
             "selectAllow", AllowFunc
             "droppable", T<bool>
             "unselectCancel", T<string>
             "slotLabelFormat", FormatterInput + !|FormatterInput
-            "slotLaneClassNames", ClassNamesGenerator SlotLaneContentArg
-            "slotLaneContent", CustomContentGenerator SlotLaneContentArg
-            "slotLaneDidMount", DidMountHandler SlotLaneMountArg
-            "slotLaneWillUnmount", WillUnmountHandler SlotLaneMountArg
-            "slotLabelClassNames", ClassNamesGenerator SlotLabelContentArg
-            "slotLabelContent", CustomContentGenerator SlotLabelContentArg
-            "slotLabelDidMount", DidMountHandler SlotLabelMountArg
-            "slotLabelWillUnmount", WillUnmountHandler SlotLabelMountArg
+            "slotLaneClassNames",  SlotLaneContentArg.Type
+            "slotLaneContent", SlotLaneContentArg.Type
+            "slotLaneDidMount", SlotLaneMountArg.Type
+            "slotLaneWillUnmount", SlotLaneMountArg.Type
+            "slotLabelClassNames",  SlotLabelContentArg.Type
+            "slotLabelContent", SlotLabelContentArg.Type
+            "slotLabelDidMount", SlotLabelMountArg.Type
+            "slotLabelWillUnmount", SlotLabelMountArg.Type
             "dayMaxEvents", T<int> + T<bool>
             "dayMaxEventRows", T<int> + T<bool>
             "dayMinWidth", T<int>
             "slotLabelInterval", CreateDuration
             "allDayText", T<string>
-            "allDayClassNames", ClassNamesGenerator AllDayContentArg
-            "allDayContent", CustomContentGenerator AllDayContentArg
-            "allDayDidMount", DidMountHandler AllDayMountArg
-            "allDayWillUnmount", WillUnmountHandler AllDayMountArg
+            "allDayClassNames",  AllDayContentArg.Type
+            "allDayContent", AllDayContentArg.Type
+            "allDayDidMount", AllDayMountArg.Type
+            "allDayWillUnmount", AllDayMountArg.Type
             "slotMinWidth", T<int>
             "navLinks", T<bool>
             "eventTimeFormat", CreateFormatter
@@ -2185,15 +2399,34 @@ module Core =
             "closeHint", T<string>
             "timeHint", T<string>
             "eventHint", T<string>
+
             "moreLinkClick", MoreLinkAction
-            "moreLinkClassNames", ClassNamesGenerator MoreLinkContentArg
-            "moreLinkContent", CustomContentGenerator MoreLinkContentArg
-            "moreLinkDidMount", DidMountHandler MoreLinkMountArg
-            "moreLinkWillUnmount", WillUnmountHandler MoreLinkMountArg
+            "moreLinkClassNames", MoreLinkContentArg.Type
+            "moreLinkContent", MoreLinkContentArg.Type
+            "moreLinkDidMount", MoreLinkMountArg.Type
+            "moreLinkWillUnmount", MoreLinkMountArg.Type
             "monthStartFormat",  CreateFormatter
             "handleCustomRendering", CustomRenderingHandler T<obj>
             "customRenderingMetaMap", T<obj[]>
-            "customRenderingReplaces", T<bool>        
+            "customRenderingReplaces", T<bool>  
+            // OptionRefiners from Interaction plugin
+            "fixedMirrorParent", T<HTMLElement>
+
+            // ExtraOptionRefiners from List plugin
+            "listDayFormat",  createFalsableFormatter
+            "listDaySideFormat",  createFalsableFormatter
+            "noEventsClassNames", NoEventsContentArg.Type
+            "noEventsContent", NoEventsContentArg.Type
+            "noEventsDidMount", NoEventsMountArg.Type
+            "noEventsWillUnmount", NoEventsMountArg.Type        
+
+            // ExtraOptionRefiners from Multimonth plugin
+            "multiMonthTitleFormat", CreateFormatter
+            "multiMonthMaxColumns", T<int>
+            "multiMonthMinWidth", T<int>
+
+            // ExtraOptionRefiners from timegrid plugin
+            "allDaySlot", T<bool>
         ]
 
         BaseOptions
@@ -2307,54 +2540,7 @@ module Core =
         |+> Pattern.OptionalFields (CalendarListenerRefinersOptionalFields |> List.ofSeq)
         |> ignore
 
-        PluginDef
-        |=> Inherits PluginHooks
-        |+> Pattern.RequiredFields [
-            "id", T<string>
-            "name", T<string>
-            "deps", !|TSelf
-        ]
-        |> ignore
-
-        DateSpanApi
-        |=> Inherits RangeApi
-        |+> Instance [
-            "allDay" =@ T<bool>
-        ]
-        |> ignore 
-
-        ViewContext 
-        |=> Inherits CalendarContext
-        |+> Pattern.RequiredFields []
-        |+> Pattern.OptionalFields [
-            "options", ViewOptionsRefined.Type
-            "theme", Theme.Type
-            "isRtl", T<bool>
-            "dateProfileGenerator", DateProfileGenerator.Type
-            "viewSpec", ViewSpec.Type
-            "viewApi", ViewImpl.Type
-            "addResizeHandler", ResizeHandler?handler ^-> T<unit>
-            "removeResizeHandler", ResizeHandler?handler ^-> T<unit>
-            "createScrollResponder", ScrollRequestHandler?execFunc ^-> ScrollResponder
-            "registerInteractiveComponent", DateComponent.[T<obj>, T<obj>]?``component`` * InteractionSettingsInput?settingsInput ^-> T<unit>
-            "unregisterInteractiveComponent", DateComponent.[T<obj>, T<obj>]?``component`` ^-> T<unit>
-        ]     
-        |> ignore
-
-        DateProfileGeneratorProps
-        |=> Inherits DateProfileOptions
-        |+> Pattern.RequiredFields [
-            "dateProfileGeneratorClass", DateProfileGeneratorClass.Type
-            "duration", Duration.Type
-            "durationUnit", T<string>
-            "usesMinMaxTime", T<bool>
-            "dateEnv", DateEnv.Type
-            "calendarApi", CalendarImpl.Type
-        ]
-        |> ignore
-
-        PluginHooks 
-        |+> Pattern.RequiredFields [
+        let PluginHooksOptionalFields = [
             "premiumReleaseDate", T<Date> + T<unit>
             "reducers", !| ReducerFunc
             "isLoadingFuncs", !| (DictionaryObj?state ^-> T<bool>)
@@ -2385,23 +2571,76 @@ module Core =
             "listenerRefiners", GenericListenerRefiners
             "optionRefiners", GenericRefiners
             "propSetHandlers", DictionaryObj
-        ]
-        |+> Pattern.OptionalFields [
             "cmdFormatter", CmdFormatterFunc
             "namedTimeZonedImpl", NamedTimeZoneImplClass.Type
             "elementDraggingImpl", ElementDraggingClass.Type
         ]
+
+        PluginDef
+        |+> Pattern.RequiredFields [
+            "id", T<string>
+            "name", T<string>
+            "deps", !|TSelf
+        ]
+        |+> Pattern.OptionalFields PluginHooksOptionalFields // Inherits PluginHooks
+        |> ignore
+
+        DateSpanApi
+        |+> Pattern.RequiredFields [
+            "allDay", T<bool>
+        ]
+        |+> Pattern.OptionalFields [
+            // Inherits RangeApi
+            "start", T<Date>
+            "end", T<Date>
+            "startStr", T<string>
+            "endStr", T<string>
+        ]
+        |> ignore 
+
+        ViewContext 
+        |+> Pattern.RequiredFields []
+        |+> Pattern.OptionalFields ([
+            "theme", Theme.Type
+            "isRtl", T<bool>
+            "dateProfileGenerator", DateProfileGenerator.Type
+            "viewSpec", ViewSpec.Type
+            "viewApi", ViewImpl.Type
+            "addResizeHandler", ResizeHandler?handler ^-> T<unit>
+            "removeResizeHandler", ResizeHandler?handler ^-> T<unit>
+            "createScrollResponder", ScrollRequestHandler?execFunc ^-> ScrollResponder
+            "registerInteractiveComponent", DateComponent.[T<obj>, T<obj>]?``component`` * InteractionSettingsInput?settingsInput ^-> T<unit>
+            "unregisterInteractiveComponent", DateComponent.[T<obj>, T<obj>]?``component`` ^-> T<unit>
+        ] @ CalendarContextOptionalFields // Inherits CalendarContext
+        )
+        |> ignore
+
+        DateProfileGeneratorProps
+        |+> Pattern.RequiredFields [
+            "dateProfileGeneratorClass", DateProfileGeneratorClass.Type
+            "duration", Duration.Type
+            "durationUnit", T<string>
+            "usesMinMaxTime", T<bool>
+            "dateEnv", DateEnv.Type
+            "calendarApi", CalendarImpl.Type
+        ]
+        |+> Pattern.OptionalFields DateProfileOptionsOptionalFields // Inherits DateProfileOptions
+        |> ignore
+
+        PluginHooks 
+        |+> Pattern.RequiredFields []
+        |+> Pattern.OptionalFields PluginHooksOptionalFields
         |> ignore
 
         CalendarData
-        |=> Inherits CalendarDataBase
-        |+> Pattern.RequiredFields [
-            "viewTitle", T<string>
-            "calendarApi", CalendarImpl.Type
-            "dispatch", T<obj>?action ^-> T<unit>
-            "emitter", Emitter.[CalendarListeners]
-            "getCurrentData", T<unit> ^-> TSelf
-        ]
+        |+> Pattern.RequiredFields []
+        |+> Pattern.OptionalFields (
+            CalendarDataFields @
+            //Inherits CalendarDataBase
+            CalendarOptionsDataFields @
+            CalendarCurrentViewDataFields @
+            CalendarDataManagerStateFields
+        )
         |> ignore
 
         EventStore
@@ -2413,7 +2652,10 @@ module Core =
 
         ViewOptions
         |+> Pattern.RequiredFields []
-        |+> Pattern.OptionalFields CalendarListenerRefinersOptionalFields
+        |+> Pattern.OptionalFields (
+            (CalendarListenerRefinersOptionalFields |> List.ofSeq) @
+            BaseOptionsOptionalFields
+        )            
         |> ignore
 
         let CustomContentGeneratorParameter (renderProps:CodeModel.TypeParameter) = CustomContent + (renderProps?renderProps * T<obj>?createElement ^-> CustomContent + T<bool>)
@@ -2435,26 +2677,36 @@ module Core =
 
         let InnerContainerFuncTypeParam renderProps = T<obj>?InnerContainer * renderProps?renderProps * ElAttrs?elAttrs ^-> ComponentChildren
 
-        let ClassNamesGeneratorParameter (renderProps:CodeModel.TypeParameter) = ClassNamesInput + (renderProps?renderProps ^-> ClassNamesInput)
+        let Parameter (renderProps:CodeModel.TypeParameter) = ClassNamesInput + (renderProps?renderProps ^-> ClassNamesInput)
 
         let ContentContainerPropsOptionalFields renderProps = [
             "elTag", T<string>
             "children", !?(InnerContainerFuncTypeParam renderProps)
         ]
 
-        let ContentContainerProps =
+        let ContentContainerProps = 
             Generic - fun renderProps ->
-            Class "ContentContainerProps"
-            |=> Inherits ContentGeneratorProps.[renderProps]
-            |+> Pattern.RequiredFields [
-                "classNameGenerator", !?(ClassNamesGeneratorParameter renderProps)
-                "didMount", !?((renderProps.Type + T<obj>)?renderProps ^-> T<unit>)
-                "willUnmount", !?((renderProps.Type + T<obj>)?renderProps ^-> T<unit>)
-            ]
-            |+> Pattern.OptionalFields (
-                ContentContainerPropsOptionalFields renderProps @
-                ElAttrsPropsOptionalFields
-            )
+            Pattern.Config "ContentContainerProps" {
+                Required = []
+                Optional = (
+                    [
+                        "classNameGenerator", !?(Parameter renderProps)
+                        "didMount", !?((renderProps.Type + T<obj>)?renderProps ^-> T<unit>)
+                        "willUnmount", !?((renderProps.Type + T<obj>)?renderProps ^-> T<unit>)
+
+                        // inherits ContentGeneratorProps
+                        "renderProps", renderProps.Type
+                        "generatorName", T<string>
+                    ] @
+                    ContentContainerPropsOptionalFields renderProps @
+                    [
+                        // inherits ContentGeneratorProps
+                        "customGenerator", CustomContentGeneratorParameter renderProps
+                        "defaultGenerator", renderProps.Type?renderProps ^-> T<obj>
+                    ] @
+                    ElAttrsPropsOptionalFields // inherits ElAttrsProps
+                )
+            }
 
         let MoreLinkContainerState =
             Pattern.Config "MoreLinkContainerState" {
@@ -2465,72 +2717,91 @@ module Core =
                 Optional = []
             }
 
-        let EventTuple =
-            Class "EventTuple"
-            |+> Pattern.RequiredFields [
-                "def", EventDef.Type
-                "instance", !?EventInstance
-            ]
+        let EventTuple = 
+            Pattern.Config "EventTuple" {
+                Required = [
+                    "def", EventDef.Type
+                    "instance", !?EventInstance
+                ]
+                Optional = []
+            }
             |> Import "EventTuple" "@fullcalendar/core"
 
-        let EventRenderRange =
-            Class "EventRenderRange"
-            |=> Inherits EventTuple
-            |+> Pattern.RequiredFields [
-                "ui", EventUi.Type
-                "range", DateRange.Type
-                "isStart", T<bool>
-                "isEnd", T<bool>
-            ]
+        let EventRenderRange = 
+            Pattern.Config "EventRenderRange" {
+                Required = []
+                Optional = [
+                    "ui", EventUi.Type
+                    "range", DateRange.Type
+                    "isStart", T<bool>
+                    "isEnd", T<bool>
+
+                    // Inherits EventTuple
+                    "def", EventDef.Type
+                    "instance", !?EventInstance
+                ]
+            }
+            |> Import "EventRenderRange" "@fullcalendar/core"
+
+        let SegFields = [
+            "component", DateComponent.[T<obj>, T<obj>]
+            "eventRange", EventRenderRange.Type
+            "el", T<obj>
+            "isStart", T<bool>
+            "isEnd", T<bool>
+        ]
 
         let Seg =
             Pattern.Config "Seg" {
-                Required = [
-                    "isStart", T<bool>
-                    "isEnd", T<bool>
-                ]
-                Optional = [
-                    "component", DateComponent.[T<obj>, T<obj>]
-                    "eventRange", EventRenderRange.Type
-                    "el", T<obj>
-                ]
+                Required = []
+                Optional = SegFields
+            }
+            |> Import "Seg" "@fullcalendar/core"
+
+        let MoreLinkContainerProps = 
+            Pattern.Config "MoreLinkContainerProps" {
+                Required = []
+                Optional = (
+                    [                        
+                        "dateProfile", DateProfile.Type
+                        "todayRange", DateRange.Type
+                        "allDayDate", !?DateMarker 
+                        "moreCnt", T<int>
+                        "allSegs", !| Seg
+                        "hiddenSegs", !| Seg
+                        "popoverContent", T<unit> ^-> T<obj>
+                        "extraDateSpan", DictionaryObj
+                        "alignmentElRef", !?T<HTMLElement>
+                        "alignGridTop", T<bool>
+                        "forceTimed", T<bool>
+                        "defaultGenerator", MoreLinkContentArg?renderProps ^-> T<obj>
+                        "children", InnerContainerFunc MoreLinkContentArg
+                        // Inherits ElProps
+                        "elTag", T<string>
+                    ] @ 
+                    ElAttrsPropsOptionalFields // Inherits ElProps
+                )
             }
 
-        let MoreLinkContainerProps =
-            Class "MoreLinkContainerProps"
-            |=> Inherits ElProps
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "dateProfile", DateProfile.Type
-                "todayRange", DateRange.Type
-                "allDayDate", !?DateMarker 
-                "moreCnt", T<int>
-                "allSegs", !| Seg
-                "hiddenSegs", !| Seg
-                "popoverContent", T<unit> ^-> T<obj>
-                "extraDateSpan", DictionaryObj
-                "alignmentElRef", !?T<HTMLElement>
-                "alignGridTop", T<bool>
-                "forceTimed", T<bool>
-                "defaultGenerator", MoreLinkContentArg?renderProps ^-> T<obj>
-                "children", InnerContainerFunc MoreLinkContentArg
-            ]
-
-        let DayCellContainerProps =
-            Class "DayCellContainerProps"
-            |=> Inherits ElProps
-            |+> Pattern.RequiredFields [
-                "date", DateMarker
-                "dateProfile", DateProfile.Type
-                "todayRange", DateRange.Type
-            ]
-            |+> Pattern.OptionalFields [
-                "isMonthStart", T<bool>
-                "showDayNumber", T<bool>
-                "extraRenderProps", DictionaryObj
-                "defaultGenerator", (DayCellContentArg?renderProps ^-> ComponentChild)
-                "children", InnerContainerFunc DayCellContentArg
-            ]
+        let DayCellContainerProps = 
+            Pattern.Config "DayCellContainerProps" {
+                Required = []
+                Optional = (
+                    [
+                        "isMonthStart", T<bool>
+                        "showDayNumber", T<bool>
+                        "extraRenderProps", DictionaryObj
+                        "defaultGenerator", (DayCellContentArg?renderProps ^-> ComponentChild)
+                        "children", InnerContainerFunc DayCellContentArg
+                        "date", DateMarker
+                        "dateProfile", DateProfile.Type
+                        "todayRange", DateRange.Type
+                        // Inherits ElProps
+                        "elTag", T<string>
+                    ] @ 
+                    ElAttrsPropsOptionalFields // Inherits ElProps
+                )
+            }
 
         let DayCellRenderPropsInput =
             Pattern.Config "DayCellRenderPropsInput" {
@@ -2549,14 +2820,21 @@ module Core =
                 ]
             }
 
-        let ViewContainerProps =
-            Class "ViewContainerProps"
-            |=> Inherits ElProps
-            |+> Pattern.RequiredFields []
-            |+> Pattern.OptionalFields [
-                "viewSpec", ViewSpec.Type
-                "children", ComponentChildren
-            ]
+        let ViewContainerProps = 
+            Pattern.Config "ViewContainerProps" {
+                Required = [
+                    // Inherits ElProps
+                    "elTag", T<string>
+                ]
+                Optional = (
+                    [
+                        "viewSpec", ViewSpec.Type
+                        "children", ComponentChildren
+                    ] @
+                    ElAttrsPropsOptionalFields // Inherits ElProps
+                )
+            }
+            |> Import "ViewContainerProps" "@fullcalendar/core"
 
         let SegSpan =
             Pattern.Config "SegSpan" {
@@ -2566,6 +2844,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "SegSpan" "@fullcalendar/core"
 
         let SegEntry =
             Pattern.Config "SegEntry" {
@@ -2577,6 +2856,7 @@ module Core =
                     "thickness", T<float>
                 ]
             }
+            |> Import "SegEntry" "@fullcalendar/core"
 
         let SegInsertion =
             Pattern.Config "SegInsertion" {
@@ -2591,6 +2871,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "SegInsertion" "@fullcalendar/core"
 
         let SegRect =
             Pattern.Config "SegRect" {
@@ -2602,6 +2883,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "SegRect" "@fullcalendar/core"
 
         let SegEntryGroup =
             Pattern.Config "SegEntryGroup" {
@@ -2611,6 +2893,7 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "SegEntryGroup" "@fullcalendar/core"
 
         let CalendarRootProps =
             Pattern.Config "CalendarRootProps" {
@@ -2687,14 +2970,15 @@ module Core =
                 Optional = []
             }
 
-        let DayTableSeg =
-            Class "DayTableSeg"
-            |=> Inherits Seg
-            |+> Pattern.RequiredFields [
-                "row", T<int>
-                "firstCol", T<int>
-                "lastCol", T<int>
-            ]
+        let DayTableSeg = 
+            Pattern.Config "DayTableSeg" {
+                Required = []
+                Optional = [
+                    "row", T<int>
+                    "firstCol", T<int>
+                    "lastCol", T<int>
+                ] @ SegFields // Inherits Seg
+            }
 
         let DayTableCell =
             Pattern.Config "DayTableCell" {
@@ -2709,6 +2993,7 @@ module Core =
                     "extraDateSpan", DictionaryObj
                 ]
             }
+            |> Import "DayTableCell" "@fullcalendar/core"
 
         let ScrollerProps =
             Pattern.Config "ScrollerProps" {
@@ -2728,26 +3013,31 @@ module Core =
                 ]
             }
 
-        let ScrollerLikeRequiredFields = [
+        let ScrollerLikeFields = [
             "needsYScrolling", T<unit> ^-> T<bool>
             "needsXScrolling", T<unit> ^-> T<bool>
         ]
 
         let ScrollerLike =
             Pattern.Config "ScrollerLike" {
-                Required = ScrollerLikeRequiredFields
-                Optional = []
+                Required = []
+                Optional = ScrollerLikeFields
             }
+            |> Import "ScrollerLike" "@fullcalendar/core"
 
-        let SimpleScrollGridSection =
-            Class "SimpleScrollGridSection"
-            |=> Inherits SectionConfig
-            |+> Pattern.RequiredFields [
-                "key", T<string>
-            ]
-            |+> Pattern.OptionalFields [
-                "chunk", ChunkConfig.Type
-            ]
+        let SimpleScrollGridSection = 
+            Pattern.Config "SimpleScrollGridSection" {
+                Required = [
+                    "key", T<string>
+                ]
+                Optional = (
+                    [
+                        "chunk", ChunkConfig.Type
+                    ] @
+                    SectionConfigOptionalFields // Inherits SectionConfig
+                )
+            }
+            |> Import "SimpleScrollGridSection" "@fullcalendar/core"
 
         let SimpleScrollGridProps =
             Pattern.Config "SimpleScrollGridProps" {
@@ -2792,15 +3082,15 @@ module Core =
                 Optional = []
             }
 
-        let NowTimerStateRequiredFields = [
+        let NowTimerStateFields = [
             "nowDate", DateMarker
             "todayRange", DateRange.Type
         ]
 
         let NowTimerState =
             Pattern.Config "NowTimerState" {
-                Required = NowTimerStateRequiredFields
-                Optional = []
+                Required = []
+                Optional = NowTimerStateFields
             }
 
         let StandardEventProps =
@@ -2841,18 +3131,18 @@ module Core =
                 Optional = []
             }
 
-        let EventContainerProps =
-            Class "EventContainerProps"
-            |+> Pattern.RequiredFields [
-                "timeText", T<string>
-                "defaultGenerator", EventContentArg?renderProps ^-> ComponentChild
-            ]
-            |+> Pattern.OptionalFields [
-                "disableDragging", T<bool>
-                "disableResizing", T<bool>
-                "children", InnerContainerFunc EventContentArg
-            ]
-               
+        let EventContainerProps = 
+            Pattern.Config "EventContainerProps" {
+                Required = []
+                Optional = [
+                    "timeText", T<string>
+                    "defaultGenerator", EventContentArg?renderProps ^-> ComponentChild
+                    "disableDragging", T<bool>
+                    "disableResizing", T<bool>
+                    "children", InnerContainerFunc EventContentArg
+                ]
+            }
+
         let BgEventProps =
             Pattern.Config "BgEventProps" {
                 Required = [
@@ -2887,21 +3177,23 @@ module Core =
                 ]
                 Optional = []
             }
+            |> Import "EventSegUiInteractionState" "@fullcalendar/core"
 
         let SlicedProps =
             Generic - fun segType ->
-                Pattern.Config "SlicedProps" {
-                    Required = [
-                        "dateSelectionSegs", !|segType
-                        "businessHourSegs", !|segType
-                        "fgEventSegs", !|segType
-                        "bgEventSegs", !|segType
-                        "eventDrag", !?EventSegUiInteractionState.Type
-                        "eventResize", !?EventSegUiInteractionState.Type
-                        "eventSelection", T<string>
-                    ]
-                    Optional = []
-                }
+            Pattern.Config "SlicedProps" {
+                Required = [
+                    "dateSelectionSegs", !|segType
+                    "businessHourSegs", !|segType
+                    "fgEventSegs", !|segType
+                    "bgEventSegs", !|segType
+                    "eventDrag", !?EventSegUiInteractionState.Type
+                    "eventResize", !?EventSegUiInteractionState.Type
+                    "eventSelection", T<string>
+                ]
+                Optional = []
+            }
+            |> Import "SlicedProps" "@fullcalendar/core"
 
         // Interface
 
@@ -2938,7 +3230,7 @@ module Core =
         ]
         |+> Instance [
             "timeZone" =@ T<string>
-            "namedTimeZoneImpl" =@ I.NamedTimeZoneImpl.Type
+            "namedTimeZoneImpl" =@ NamedTimeZoneImpl.Type
             "canComputeOffset" =@ T<bool>
             "calendarSystem" =@ I.CalendarSystem
             "locale" =@ I.Locale
@@ -3142,25 +3434,27 @@ module Core =
         |+> Static [
             Constructor (!?(T<unit> ^-> T<unit>)?drainedOption)
         ]
+        |> Import "DelayedRunner" "@fullcalendar/core"
 
     let ContentContainer =
         Generic - fun renderProps ->
-            Class "ContentContainer"
-            |=> Inherits (I.ContentContainerProps.[renderProps])
-            |+> Static [
-                "contextType" =@ T<obj>
-            ]
-            |+> Instance [
-                "didMountMisfire" =@ !?T<bool>
-                "context" =@ T<int>
-                "el" =@ T<HTMLElement>
-                "InnerContent" =@ T<obj>
+        Class "ContentContainer"
+        |=> Inherits (I.ContentContainerProps.[renderProps])
+        |+> Static [
+            "contextType" =@ T<obj>
+        ]
+        |+> Instance [
+            "didMountMisfire" =@ !?T<bool>
+            "context" =@ T<int>
+            "el" =@ T<HTMLElement>
+            "InnerContent" =@ T<obj>
 
-                "render" => T<unit> ^-> T<obj>
-                "handleEl" => T<HTMLElement>?el ^-> T<unit>
-                "componentDidMount" => T<unit> ^-> T<unit>
-                "componentWillUnmount" => T<unit> ^-> T<unit>
-            ]
+            "render" => T<unit> ^-> T<obj>
+            "handleEl" => T<HTMLElement>?el ^-> T<unit>
+            "componentDidMount" => T<unit> ^-> T<unit>
+            "componentWillUnmount" => T<unit> ^-> T<unit>
+        ]
+        |> Import "ContentContainer" "@fullcalendar/core"
 
     let MoreLinkContainer =
         Class "MoreLinkContainer"
@@ -3176,6 +3470,7 @@ module Core =
             "handleClick" => T<Dom.MouseEvent>?ev ^-> T<unit>
             "handlePopoverClose" => T<unit> ^-> T<unit>
         ]
+        |> Import "MoreLinkContainer" "@fullcalendar/core"
 
     let DayCellContainer =
         Class "DayCellContainer"
@@ -3184,6 +3479,7 @@ module Core =
             "refineRenderProps" => I.DayCellRenderPropsInput?arg ^-> I.DayCellContentArg
             "render" => T<unit> ^-> ComponentChild
         ]
+        |> Import "DayCellContainer" "@fullcalendar/core"
 
     let ViewContainer =
         Class "ViewContainer"
@@ -3191,6 +3487,7 @@ module Core =
         |+> Instance [
             "render" => T<unit> ^-> T<obj>
         ]
+        |> Import "ViewContainer" "@fullcalendar/core"
 
     let Store =
         Generic - fun t ->
@@ -3202,11 +3499,11 @@ module Core =
 
     let CustomRenderingStore =
         Generic - fun t ->
-            Class "CustomRenderingStore"
-            |=> Inherits (Store.[Dictionary T<string> I.CustomRendering.[t]])
-            |+> Instance [
-                "handle" => I.CustomRendering.[t]?customRendering ^-> T<unit>
-            ]
+        Class "CustomRenderingStore"
+        |=> Inherits (Store.[Dictionary T<string> I.CustomRendering.[t]])
+        |+> Instance [
+            "handle" => I.CustomRendering.[t]?customRendering ^-> T<unit>
+        ]
         |> Import "CustomRenderingStore" "@fullcalendar/core"
 
     let JsonRequestError =
@@ -3246,6 +3543,7 @@ module Core =
                 T<bool>?isVertical
             )
         ]
+        |> Import "PositionCache" "@fullcalendar/core"
 
     let ScrollController =
         Class "ScrollController"
@@ -3267,6 +3565,7 @@ module Core =
             "canScrollLeft" => T<unit> ^-> T<bool>
             "canScrollRight" => T<unit> ^-> T<bool>
         ]
+        |> Import "ScrollController" "@fullcalendar/core"
 
     let ElementScrollController =
         Class "ElementScrollController"
@@ -3285,6 +3584,7 @@ module Core =
         |+> Static [
             Constructor (T<HTMLElement>?el)
         ]
+        |> Import "ElementScrollController" "@fullcalendar/core"
 
     let WindowScrollController =
         Class "WindowScrollController"
@@ -3299,6 +3599,7 @@ module Core =
             "getClientHeight" => T<unit> ^-> T<float>
             "getClientWidth" => T<unit> ^-> T<float>
         ]
+        |> Import "WindowScrollController" "@fullcalendar/core"
 
     let SegHierarchy =
         Class "SegHierarchy"
@@ -3323,6 +3624,7 @@ module Core =
         |+> Static [
             Constructor (!? (I.SegEntry ^-> T<float>)?getEntryThickness)
         ]
+        |> Import "SegHierarchy" "@fullcalendar/core"
 
     let CalendarRoot =
         Class "CalendarRoot"
@@ -3335,6 +3637,7 @@ module Core =
             "handleBeforePrint" => T<unit> ^-> T<unit>
             "handleAfterPrint" => T<unit> ^-> T<unit>
         ]
+        |> Import "CalendarRoot" "@fullcalendar/core"
 
     let DayHeader =
         Class "DayHeader"
@@ -3344,6 +3647,7 @@ module Core =
                 I.DateFormatter?explicitFormat * T<obj>?datesRepDistinctDays * T<obj>?dateCnt ^-> I.DateFormatter
             "render" => T<unit> ^-> T<obj>
         ]
+        |> Import "DayHeader" "@fullcalendar/core"
 
     let TableDateCell =
         Class "TableDateCell"
@@ -3351,6 +3655,7 @@ module Core =
         |+> Instance [
             "render" => T<unit> ^-> T<obj>
         ]
+        |> Import "TableDateCell" "@fullcalendar/core"
 
     let TableDowCell =
         Class "TableDowCell"
@@ -3358,6 +3663,7 @@ module Core =
         |+> Instance [
             "render" => T<unit> ^-> T<obj>
         ]
+        |> Import "TableDowCell" "@fullcalendar/core"
 
     let DaySeriesModel =
         Class "DaySeriesModel"
@@ -3370,6 +3676,7 @@ module Core =
         |+> Static [
             Constructor (I.DateRange.Type?range * DateProfileGenerator?dateProfileGenerator)
         ]
+        |> Import "DaySeriesModel" "@fullcalendar/core"
 
     let DayTableModel =
         Class "DayTableModel"
@@ -3383,6 +3690,7 @@ module Core =
         |+> Static [
             Constructor (DaySeriesModel?daySeries * T<bool>?breakOnWeeks)
         ]
+        |> Import "DayTableModel" "@fullcalendar/core"
 
     let Scroller =
         Class "Scroller"
@@ -3394,23 +3702,25 @@ module Core =
             "getXScrollbarWidth" => T<unit> ^-> T<int>
             "getYScrollbarWidth" => T<unit> ^-> T<int>
         ]
-        |+> Pattern.RequiredFields I.ScrollerLikeRequiredFields
+        |+> Pattern.OptionalFields I.ScrollerLikeFields
+        |> Import "Scroller" "@fullcalendar/core"
 
     let RefMap =
         Generic - fun refType ->
-            Class "RefMap"
-            |+> Instance [
-                "masterCallback" =@ (refType?``val`` * T<string>?key ^-> T<unit>)
-                "currentMap" =@ Dictionary T<string> refType
+        Class "RefMap"
+        |+> Instance [
+            "masterCallback" =@ (refType?``val`` * T<string>?key ^-> T<unit>)
+            "currentMap" =@ Dictionary T<string> refType
 
-                "createRef" => (T<string> + T<int>)?key ^-> (refType?``val`` ^-> T<unit>)
-                "handleValue" => refType?``val`` * T<string>?key ^-> T<unit>
-                "collect" => !?T<int>?startIndex * !?T<int>?endIndex * !?T<int>?step ^-> !| refType
-                "getAll" => T<unit> ^-> !| refType
-            ]
-            |+> Static [
-                Constructor (!?(refType?``val`` * T<string>?key ^-> T<unit>)?masterCallback)
-            ]
+            "createRef" => (T<string> + T<int>)?key ^-> (refType?``val`` ^-> T<unit>)
+            "handleValue" => refType?``val`` * T<string>?key ^-> T<unit>
+            "collect" => !?T<int>?startIndex * !?T<int>?endIndex * !?T<int>?step ^-> !| refType
+            "getAll" => T<unit> ^-> !| refType
+        ]
+        |+> Static [
+            Constructor (!?(refType?``val`` * T<string>?key ^-> T<unit>)?masterCallback)
+        ]
+        |> Import "RefMap" "@fullcalendar/core"
 
     let RenderMicroColGroup = (!| I.ColProps)?cols * !?T<int>?shrinkWidth ^-> VNode
 
@@ -3434,25 +3744,27 @@ module Core =
             "computeShrinkWidth" => T<unit> ^-> T<int>
             "computeScrollerDims" => T<unit> ^-> I.ScrollerDims
         ]
+        |> Import "SimpleScrollGrid" "@fullcalendar/core"
 
     let NowTimer =
-            Class "NowTimer"
-            |=> Inherits I.NowTimerProps
-            |+> Static [
-                Constructor (I.NowTimerProps?props * I.ViewContext?context)
-            ]
-            |+> Instance [
-                "context" =@ I.ViewContext
-                "initialNowDate" =@ DateMarker
-                "initialNowQueriedMs" =@ T<int>
-                "timeoutId" =@ T<obj>
+        Class "NowTimer"
+        |=> Inherits I.NowTimerProps
+        |+> Static [
+            Constructor (I.NowTimerProps?props * I.ViewContext?context)
+        ]
+        |+> Instance [
+            "context" =@ I.ViewContext
+            "initialNowDate" =@ DateMarker
+            "initialNowQueriedMs" =@ T<int>
+            "timeoutId" =@ T<obj>
 
-                "render" => T<unit> ^-> ComponentChildren
-                "componentDidMount" => T<unit> ^-> T<unit>
-                "componentDidUpdate" => I.NowTimerProps?prevProps ^-> T<unit>
-                "componentWillUnmount" => T<unit> ^-> T<unit>
-            ]
-            |+> Pattern.RequiredFields I.NowTimerStateRequiredFields
+            "render" => T<unit> ^-> ComponentChildren
+            "componentDidMount" => T<unit> ^-> T<unit>
+            "componentDidUpdate" => I.NowTimerProps?prevProps ^-> T<unit>
+            "componentWillUnmount" => T<unit> ^-> T<unit>
+        ]
+        |+> Pattern.OptionalFields I.NowTimerStateFields
+        |> Import "NowTimer" "@fullcalendar/core"
 
     let StandardEvent =
         Class "StandardEvent"
@@ -3460,6 +3772,7 @@ module Core =
         |+> Instance [
             "render" => T<unit> ^-> T<obj>
         ]
+        |> Import "StandardEvent" "@fullcalendar/core"
 
     let EventContainer =
         Class "EventContainer"
@@ -3471,6 +3784,7 @@ module Core =
             "handleEl" => (T<HTMLElement>)?el ^-> T<unit>
             "componentDidUpdate" => I.EventContainerProps?prevProps ^-> T<unit>
         ]
+        |> Import "EventContainer" "@fullcalendar/core"
 
     let BgEvent =
         Class "BgEvent"
@@ -3478,15 +3792,28 @@ module Core =
         |+> Instance [
             "render" => T<unit> ^-> T<obj>
         ]
+        |> Import "BgEvent" "@fullcalendar/core"
 
     let Slicer =
         Generic -- fun segType extraArgs ->
-            Class "Slicer"
-            |+> Instance [
-                "forceDayIfListItem" =@ T<bool>
+        Class "Slicer"
+        |+> Instance [
+            "forceDayIfListItem" =@ T<bool>
 
-                "sliceRange" => I.DateRange?dateRange * (!|extraArgs)?extra ^-> !|segType
-                "sliceProps" => I.SliceableProps?props * I.DateProfile?dateProfile * !?I.Duration?nextDayThreshold * I.CalendarContext?context * (!|extraArgs)?extraArgs ^-> I.SlicedProps.[segType]
-                "sliceNowDate" => DateMarker?date * I.DateProfile?dateProfile * !?I.Duration?nextDayThreshold * I.CalendarContext?context * (!|extraArgs)?extraArgs^-> !|segType
-            ]
+            "sliceRange" => I.DateRange?dateRange * (!|extraArgs)?extra ^-> !|segType
+            "sliceProps" => I.SliceableProps?props * I.DateProfile?dateProfile * !?I.Duration?nextDayThreshold * I.CalendarContext?context * (!|extraArgs)?extraArgs ^-> I.SlicedProps.[segType]
+            "sliceNowDate" => DateMarker?date * I.DateProfile?dateProfile * !?I.Duration?nextDayThreshold * I.CalendarContext?context * (!|extraArgs)?extraArgs^-> !|segType
+        ]
+        |> Import "Slicer" "@fullcalendar/core"
+
+    let Splitter =
+        Generic - fun propsType ->
+        Class "Splitter"
+        |+> Instance [
+            "getKeyInfo" => propsType?props ^-> T<obj[]>
+            "getKeysForDateSpan" => I.DateSpan?dateSpan ^-> !| T<string>
+            "getKeysForEventDef" => I.EventDef?eventDef ^-> !| T<string>
+            "splitProps" => propsType?props ^-> Dictionary T<string> I.SplittableProps
+        ]
+        |> Import "Splitter" "@fullcalendar/core"
     // Core

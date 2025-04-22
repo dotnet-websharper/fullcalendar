@@ -168,22 +168,20 @@ module InteractionPlugin =
             "setAutoScrollEnabled" => T<bool>?bool ^-> T<unit>
         ]
 
-    let OptionRefiners =
-        Pattern.Config "OptionRefiners" {
+    let DateClickArg =
+        Pattern.Config "DateClickArg" {
             Required = []
             Optional = [
-                "fixedMirrorParent", T<HTMLElement>
+                "dayEl", T<HTMLElement>
+                "jsEvent", T<Dom.MouseEvent>
+                "view", CoreInterfaces.ViewApi.Type
+
+                // Inherits CoreInterfaces.DatePointApi
+                "date", T<Date>
+                "dateStr", T<string>
+                "allDay", T<bool>
             ]
         }
-
-    let DateClickArg =
-        Class "DateClickArg"
-        |=> Inherits CoreInterfaces.DatePointApi
-        |+> Pattern.RequiredFields [
-            "dayEl", T<HTMLElement>
-            "jsEvent", T<Dom.MouseEvent>
-            "view", CoreInterfaces.ViewApi.Type
-        ]
         |> Import "DateClickArg" "@fullcalendar/interaction"
 
     let EventDragArgFields = [
@@ -229,25 +227,38 @@ module InteractionPlugin =
         |> Import "EventResizeStopArg" "@fullcalendar/interaction"
 
     let EventResizeDoneArg =
-        Class "EventResizeDoneArg"
-        |=> Inherits CoreInterfaces.EventChangeArg
-        |+> Pattern.RequiredFields [
-            "el", T<HTMLElement>
-            "startDelta", CoreInterfaces.Duration.Type
-            "endDelta", CoreInterfaces.Duration.Type
-            "jsEvent", T<Dom.MouseEvent>
-            "view", CoreInterfaces.ViewApi.Type
-        ]
+        Pattern.Config "EventResizeDoneArg" {
+            Required = []
+            Optional = [
+                "el", T<HTMLElement>
+                "startDelta", CoreInterfaces.Duration.Type
+                "endDelta", CoreInterfaces.Duration.Type
+                "jsEvent", T<Dom.MouseEvent>
+                "view", CoreInterfaces.ViewApi.Type
+
+                // Inherits CoreInterfaces.EventChangeArg
+                "oldEvent", Core.EventImpl.Type
+                "event", Core.EventImpl.Type
+                "relatedEvents", !| Core.EventImpl
+                "revert", T<unit> ^-> T<unit>
+            ]
+        }
         |> Import "EventResizeDoneArg" "@fullcalendar/interaction"
 
     let DropArg =
-        Class "DropArg"
-        |=> Inherits CoreInterfaces.DatePointApi
-        |+> Pattern.RequiredFields [
-            "draggedEl", T<HTMLElement>
-            "jsEvent", T<Dom.MouseEvent>
-            "view", CoreInterfaces.ViewApi.Type
-        ]
+        Pattern.Config "DropArg" {
+            Required = []
+            Optional = [
+                "draggedEl", T<HTMLElement>
+                "jsEvent", T<Dom.MouseEvent>
+                "view", CoreInterfaces.ViewApi.Type
+
+                // Inherits CoreInterfaces.DatePointApi
+                "date", T<Date>
+                "dateStr", T<string>
+                "allDay", T<bool>
+            ]
+        }
         |> Import "DropArg" "@fullcalendar/interaction"
 
     let EventReceiveLeaveArgFields = [
@@ -290,21 +301,6 @@ module InteractionPlugin =
             Required = []
             Optional = ListenerRefinersOptionalFields
         }
-
-    //CoreInterfaces.BaseOptions
-    //    |=> Inherits OptionRefiners
-    //    |> ignore
-
-    CoreInterfaces.CalendarListenerRefinersOptionalFields.AddRange ListenerRefinersOptionalFields
-
-    CoreInterfaces.CalendarOptions 
-        |+> Pattern.RequiredFields []
-        |+> Pattern.OptionalFields (
-            CoreInterfaces.CalendarOptionRefinersOptionalFields @
-            (CoreInterfaces.CalendarListenerRefinersOptionalFields |> List.ofSeq) @
-            CoreInterfaces.BaseOptionsOptionalFields
-        )
-        |> ignore
 
     let DragMetaGenerator = CoreInterfaces.DragMetaInput + (T<HTMLElement>?el ^-> CoreInterfaces.DragMetaInput)
 

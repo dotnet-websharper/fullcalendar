@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	  
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -10,6 +9,9 @@
 			<NpmPackage Name="@fullcalendar/core" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
 			<NpmPackage Name="@fullcalendar/daygrid" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
 			<NpmPackage Name="@fullcalendar/interaction" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/list" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/multimonth" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/timegrid" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
 		</NpmDependencies>
 	</PropertyGroup>
 
@@ -17,6 +19,8 @@
     <Compile Include="Core.fs" />
     <Compile Include="Daygrid.fs" />
     <Compile Include="Interaction.fs" />
+    <Compile Include="List.fs" />
+    <Compile Include="Timegrid.fs" />
     <Compile Include="Main.fs" />
     <None Include="wsconfig.json" />
   </ItemGroup>
