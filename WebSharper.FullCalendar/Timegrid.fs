@@ -35,7 +35,7 @@ module TimegridPlugin =
             "isoTimeStr" =@ T<string>
             "isLabeled" =@ T<bool>
         ]
-        |> Import "TimeSlatMeta" "@fullcalendar/timegrid"
+        |> Import "TimeSlatMeta" "@fullcalendar/timegrid/internal"
 
     let TimeColsSlatsCoords =
         Class "TimeColsSlatsCoords"
@@ -48,14 +48,14 @@ module TimegridPlugin =
             "computeDateTop" => Core.DateMarker?``when`` * !?Core.DateMarker?startOfDayDate ^-> T<float>
             "computeTimeTop" => CoreInterface.Duration?duration ^-> T<float>
         ]
-        |> Import "TimeColsSlatsCoords" "@fullcalendar/timegrid"
+        |> Import "TimeColsSlatsCoords" "@fullcalendar/timegrid/internal"
 
     let TimeColsViewState =
         Pattern.Config "TimeColsViewState" {
             Required = []
-            Optional = [
+            Optional = [ (
                 "slatCoords", TimeColsSlatsCoords.Type
-            ]
+            ) ]
         }
 
     let MaxEventProps =
@@ -70,9 +70,9 @@ module TimegridPlugin =
     let State = 
         Pattern.Config "State" {
             Required = []
-            Optional = [
+            Optional = [ (
                 "slatCoords", T<obj>
-            ]
+            ) ]
         }
 
     let TimeColsView =
@@ -96,7 +96,7 @@ module TimegridPlugin =
             "renderTableRowAxis" => !?T<int>?rowHeight ^-> T<obj>
             "handleSlatCoords" => TimeColsSlatsCoords?slatCoords ^-> T<unit>
         ]
-        |> Import "TimeColsView" "@fullcalendar/timegrid"
+        |> Import "TimeColsView" "@fullcalendar/timegrid/internal"
 
     let DayTimeColsView =
         Class "DayTimeColsView"
@@ -104,7 +104,7 @@ module TimegridPlugin =
         |+> Instance [
             "render" => T<unit> ^-> T<obj>
         ]
-        |> Import "DayTimeColsView" "@fullcalendar/timegrid"
+        |> Import "DayTimeColsView" "@fullcalendar/timegrid/internal"
 
     let TimeColsSeg =
         Pattern.Config "TimeColsSeg" {
@@ -115,7 +115,7 @@ module TimegridPlugin =
             ]
             Optional = CoreInterface.SegFields
         }
-        |> Import "TimeColsSeg" "@fullcalendar/timegrid"
+        |> Import "TimeColsSeg" "@fullcalendar/timegrid/internal"
 
     let DayTimeColsProps =
         Pattern.Config "DayTimeColsProps" {
@@ -152,7 +152,7 @@ module TimegridPlugin =
         |+> Instance [
             "render" => T<unit> ^-> T<obj>
         ]
-        |> Import "DayTimeCols" "@fullcalendar/timegrid"
+        |> Import "DayTimeCols" "@fullcalendar/timegrid/internal"
 
     let DayTimeColsSlicer =
         Class "DayTimeColsSlicer"
@@ -160,7 +160,7 @@ module TimegridPlugin =
         |+> Instance [
             "sliceRange" => CoreInterface.DateRange?range * (!| CoreInterface.DateRange)?dayRanges ^-> !| TimeColsSeg
         ]
-        |> Import "DayTimeColsSlicer" "@fullcalendar/timegrid"
+        |> Import "DayTimeColsSlicer" "@fullcalendar/timegrid/internal"
 
     let TimeColsProps =
         Pattern.Config "TimeColsProps" {
@@ -197,9 +197,9 @@ module TimegridPlugin =
     let TimeColsState =
         Pattern.Config "TimeColsState" {
             Required = []
-            Optional = [
+            Optional = [ (
                 "slatCoords", !?TimeColsSlatsCoords
-            ]
+            ) ]
         }
 
     let TimeCols =
@@ -218,4 +218,4 @@ module TimegridPlugin =
             "handleSlatCoords" => !?TimeColsSlatsCoords?coords ^-> T<unit>
             "queryHit" => T<float>?left * T<float>?top ^-> CoreInterface.Hit
         ]
-        |> Import "TimeCols" "@fullcalendar/timegrid"
+        |> Import "TimeCols" "@fullcalendar/timegrid/internal"

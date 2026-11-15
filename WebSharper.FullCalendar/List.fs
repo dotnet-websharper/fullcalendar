@@ -31,4 +31,4 @@ module ListPlugin =
             "eventRangesToSegs" => (!| CoreInterface.EventRenderRange)?eventRanges * (!| CoreInterface.DateRange)?dayRanges ^-> !| T<obj>
             "eventRangeToSegs" => CoreInterface.EventRenderRange?eventRange * (!| CoreInterface.DateRange)?dayRanges ^-> !| T<obj>
         ]
-        |> Import "ListView" "@fullcalendar/list"
+        |> Import "ListView" "@fullcalendar/list/internal"
