@@ -268,9 +268,24 @@ dependencies.
 `dist/` to the `gh-pages` branch with `peaceiris/actions-gh-pages`. The deploy
 runs only from the default branch.
 
+## Upstream license (FullCalendar)
+
+The binding's own code is Apache 2.0, but the JavaScript library it binds is
+licensed differently — **MIT** (SPDX: `MIT`) — for the packages this binding
+declares (`@fullcalendar/core`, `daygrid`, `interaction`, `list`, `multimonth`
+and `timegrid`, version **6.1.22**, copyright © 2021 Adam Shaw).
+
+- Upstream license: <https://github.com/fullcalendar/fullcalendar/blob/v6.1.22/LICENSE.md>
+- Licensing page: <https://fullcalendar.io/license>
+
+MIT is permissive, not copyleft: it allows commercial and closed-source use,
+and there is no obligation to publish your own code. The one requirement is
+that the copyright notice and permission notice travel with copies of the
+library — which matters when you ship the bundled JavaScript the binding
+produces (the notice is included in each npm package, so it is preserved by
+the bundler's license comments). The binding itself ships no upstream source,
+only the npm dependency declarations.
+
 ## License
 
 Apache 2.0 — see [LICENSE.md](LICENSE.md).
-
-FullCalendar itself is MIT licensed; see
-[fullcalendar.io](https://fullcalendar.io/license) for details.
