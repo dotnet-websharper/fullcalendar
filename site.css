@@ -1,0 +1,285 @@
+:root {
+  color-scheme: light;
+
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-alt: #f1f2f7;
+  --border: #e2e5ee;
+  --text: #1c2230;
+  --muted: #5b6472;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-text: #ffffff;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.06);
+  --code-bg: #f1f2f7;
+
+  /* FullCalendar's classic theme is driven by CSS variables. */
+  --fc-page-bg-color: #ffffff;
+  --fc-neutral-bg-color: #f1f2f7;
+  --fc-border-color: #e2e5ee;
+  --fc-button-bg-color: #4f46e5;
+  --fc-button-border-color: #4338ca;
+  --fc-button-hover-bg-color: #4338ca;
+  --fc-button-hover-border-color: #3730a3;
+  --fc-button-active-bg-color: #3730a3;
+  --fc-button-active-border-color: #312e81;
+  --fc-button-text-color: #ffffff;
+  --fc-event-bg-color: #4f46e5;
+  --fc-event-border-color: #4338ca;
+  --fc-event-text-color: #ffffff;
+  --fc-today-bg-color: rgba(79, 70, 229, 0.08);
+  --fc-highlight-color: rgba(79, 70, 229, 0.14);
+  --fc-now-indicator-color: #dc2626;
+  --fc-more-link-bg-color: #e2e5ee;
+  --fc-more-link-text-color: #1c2230;
+  --fc-list-event-hover-bg-color: #f1f2f7;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0f1420;
+  --surface: #171d2b;
+  --surface-alt: #1f2637;
+  --border: #2b3446;
+  --text: #e8ecf6;
+  --muted: #9aa4b8;
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --primary-text: #0f1420;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.35);
+  --code-bg: #1f2637;
+
+  --fc-page-bg-color: #171d2b;
+  --fc-neutral-bg-color: #1f2637;
+  --fc-border-color: #2b3446;
+  --fc-button-bg-color: #4f46e5;
+  --fc-button-border-color: #6366f1;
+  --fc-button-hover-bg-color: #6366f1;
+  --fc-button-hover-border-color: #818cf8;
+  --fc-button-active-bg-color: #818cf8;
+  --fc-button-active-border-color: #a5b4fc;
+  --fc-button-text-color: #f8fafc;
+  --fc-event-bg-color: #6366f1;
+  --fc-event-border-color: #818cf8;
+  --fc-event-text-color: #f8fafc;
+  --fc-today-bg-color: rgba(129, 140, 248, 0.12);
+  --fc-highlight-color: rgba(129, 140, 248, 0.2);
+  --fc-now-indicator-color: #f87171;
+  --fc-more-link-bg-color: #2b3446;
+  --fc-more-link-text-color: #e8ecf6;
+  --fc-list-event-hover-bg-color: #1f2637;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--primary);
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 28px 20px 12px;
+}
+
+.app-titles h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  letter-spacing: -0.02em;
+}
+
+.app-titles p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.app-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-source {
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+}
+
+.page {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 8px 20px 64px;
+}
+
+.status {
+  margin: 12px 0 4px;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.card-header h2 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.card-header p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+code {
+  background: var(--code-bg);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.86em;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.btn {
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 7px 13px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-alt);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: var(--primary);
+}
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-text);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendar-host {
+  min-height: 520px;
+}
+
+.external-events {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.external-event {
+  padding: 7px 12px;
+  border-radius: 9px;
+  color: #ffffff;
+  font-size: 0.85rem;
+  cursor: grab;
+  user-select: none;
+}
+
+.chip-indigo { background: #4f46e5; }
+.chip-teal { background: #0d9488; }
+.chip-amber { background: #b45309; }
+
+.readout,
+.log {
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.log {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.selected {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Content generators used from Client.fs */
+.dh { font-weight: 600; }
+.dh-today { color: var(--primary); }
+.slot-label { font-size: 0.78rem; }
+.evt { display: inline-flex; gap: 6px; align-items: baseline; }
+.evt-title { font-weight: 600; }
+.evt-time { opacity: 0.8; font-size: 0.78rem; }
+
+/* Day-cell classes from `dayCellClassNames` */
+.fc .cell-other { background: color-mix(in srgb, var(--surface-alt) 70%, transparent); }
+.fc .cell-today { outline: 1px solid var(--primary); outline-offset: -1px; }
+
+/* FullCalendar renders its own controls when `headerToolbar` is re-enabled
+   from the sample; keep them on-theme. */
+.fc .fc-button {
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.1rem;
+}
