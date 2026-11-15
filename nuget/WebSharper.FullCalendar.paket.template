@@ -1,0 +1,22 @@
+type file
+id WebSharper.FullCalendar
+authors
+    IntelliFactory
+owners
+    IntelliFactory
+repositoryType git
+repositoryUrl https://github.com/dotnet-websharper/fullcalendar/
+licenseUrl https://github.com/dotnet-websharper/fullcalendar/blob/main/LICENSE.md
+iconUrl https://github.com/dotnet-websharper/core/raw/websharper50/tools/WebSharper.png
+projectUrl https://github.com/dotnet-websharper/fullcalendar
+description
+    WebSharper bindings for FullCalendar
+tags
+    Web JavaScript F# C#
+files
+    ../WebSharper.FullCalendar/bin/Release/netstandard2.0/WebSharper.FullCalendar.dll ==> lib/netstandard2.0
+    ../WebSharper.FullCalendar/bin/Release/netstandard2.0/WebSharper.FullCalendar.websharper ==> lib/netstandard2.0
+    ../WebSharper.FullCalendar/bin/Release/netstandard2.0/WebSharper.FullCalendar.xml ==> lib/netstandard2.0
+dependencies
+        WebSharper ~> LOCKEDVERSION:[3]
+        WebSharper.TouchEvents ~> LOCKEDVERSION:[3]
