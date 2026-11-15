@@ -17,11 +17,12 @@ NUGET
       WebSharper (10.1.10.687) - restriction: || (== net10.0) (&& (== netstandard2.0) (>= net5.0))
     WebSharper.FSharp (10.1.10.687)
       WebSharper (10.1.10.687)
-    WebSharper.TouchEvents (10.1.0.667)
-      WebSharper (>= 10.1 < 10.2)
     WebSharper.UI (10.1.8.687)
       HtmlAgilityPack (>= 1.12.4)
       WebSharper (>= 10.1.10.687 < 10.1.11)
+  remote: https://nuget.pkg.github.com/dotnet-websharper/index.json
+    WebSharper.TouchEvents (10.1.0.700)
+      WebSharper (>= 10.1.10 < 10.2)
 
 GROUP wsbuild
 
