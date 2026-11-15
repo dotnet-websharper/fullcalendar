@@ -15,7 +15,6 @@ tags
     Web JavaScript F# C#
 files
     ../WebSharper.FullCalendar/bin/Release/netstandard2.0/WebSharper.FullCalendar.dll ==> lib/netstandard2.0
-    ../WebSharper.FullCalendar/bin/Release/netstandard2.0/WebSharper.FullCalendar.websharper ==> lib/netstandard2.0
     ../WebSharper.FullCalendar/bin/Release/netstandard2.0/WebSharper.FullCalendar.xml ==> lib/netstandard2.0
 dependencies
         WebSharper ~> LOCKEDVERSION:[3]
