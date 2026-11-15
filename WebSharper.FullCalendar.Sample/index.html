@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSharper.FullCalendar — sample</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234f46e5'/%3E%3Crect x='2.5' y='4' width='11' height='9.5' rx='1' fill='white'/%3E%3Cpath d='M2.5 7h11' stroke='%234f46e5' stroke-width='1.2'/%3E%3Cpath d='M5 2.6v2M11 2.6v2' stroke='white' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <script>
+        // Apply a previously chosen theme before first paint. Light is the
+        // default; the key is shared with Client.fs (themeStorageKey).
+        try {
+            var t = localStorage.getItem('websharper-fullcalendar-theme');
+            if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+        } catch (e) { }
+    </script>
+    <link rel="stylesheet" href="site.css" />
+    <!-- ws-head -->
+</head>
+<body>
+    <header class="app-header">
+        <div class="app-titles">
+            <h1>WebSharper.FullCalendar</h1>
+            <p>FullCalendar 6 bindings for F# — with <a href="https://websharper.com">WebSharper</a></p>
+        </div>
+        <div class="app-actions">
+            <button class="btn theme-toggle" ws-onclick="ToggleTheme" title="Switch between the light and dark theme">
+                <span>${themeLabel}</span>
+            </button>
+            <a class="app-source" href="https://github.com/dotnet-websharper/fullcalendar">Source</a>
+        </div>
+    </header>
+
+    <main class="page">
+        <p class="status">${status}</p>
+        <p class="hint">Version ${version}</p>
+
+        <section class="card">
+            <header class="card-header">
+                <h2>Views</h2>
+                <p>
+                    <code>Calendar(container, CalendarOptions(...))</code> with the dayGrid, timeGrid,
+                    list, multiMonth and interaction plugins. Switching views calls
+                    <code>CalendarApi.changeView</code>.
+                </p>
+            </header>
+            <div class="toolbar">
+                <button class="btn btn-primary" ws-onclick="MonthView">Month</button>
+                <button class="btn" ws-onclick="WeekView">Week</button>
+                <button class="btn" ws-onclick="DayView">Day</button>
+                <button class="btn" ws-onclick="ListView">List</button>
+                <button class="btn" ws-onclick="MultiMonthView">Multi-month</button>
+                <span class="spacer"></span>
+                <button class="btn" ws-onclick="Prev">‹</button>
+                <button class="btn" ws-onclick="Today">Today</button>
+                <button class="btn" ws-onclick="Next">›</button>
+                <button class="btn" ws-onclick="PrevYear">‹‹</button>
+                <button class="btn" ws-onclick="NextYear">››</button>
+            </div>
+            <div class="toolbar">
+                <button class="btn" ws-onclick="IncrementDate">incrementDate("1d")</button>
+                <button class="btn" ws-onclick="GotoDate">gotoDate(2026-12-25)</button>
+                <button class="btn" ws-onclick="SelectRange">select 20–23 Nov</button>
+                <button class="btn" ws-onclick="Unselect">unselect</button>
+                <button class="btn" ws-onclick="UpdateSize">updateSize</button>
+                <button class="btn" ws-onclick="BatchRender">batchRendering</button>
+                <button class="btn" ws-onclick="ToggleNowIndicator">toggle nowIndicator</button>
+                <button class="btn" ws-onclick="SetTitle">own toolbar</button>
+                <span class="spacer"></span>
+                <button class="btn" ws-onclick="CreateCalendar">Create</button>
+                <button class="btn" ws-onclick="DestroyCalendar">Destroy</button>
+            </div>
+            <div id="calendar" class="calendar-host"></div>
+        </section>
+
+        <section class="card">
+            <header class="card-header">
+                <h2>Events</h2>
+                <p>
+                    <code>CalendarApi.addEvent/getEventById/getEvents/removeAllEvents</code> plus
+                    <code>EventApi</code> mutation: <code>setProp</code>, <code>setExtendedProp</code>,
+                    <code>moveDates</code>, <code>setAllDay</code>, <code>remove</code>,
+                    <code>toPlainObject</code>, <code>toJSON</code> and <code>formatRange</code>.
+                    Click a day or drag across days to create events (see the log below).
+                </p>
+            </header>
+            <div class="toolbar">
+                <button class="btn btn-primary" ws-onclick="AddEvent">Add event</button>
+                <button class="btn" ws-onclick="MutateFirstEvent">Mutate first</button>
+                <button class="btn" ws-onclick="InspectFirstEvent">Inspect first</button>
+                <button class="btn" ws-onclick="FindFirstEvent">getEventById "kickoff"</button>
+                <button class="btn" ws-onclick="RemoveEvent">Remove first</button>
+                <button class="btn" ws-onclick="RemoveAll">Remove all</button>
+            </div>
+            <p class="selected">Selected event: <strong>${selected}</strong></p>
+        </section>
+
+        <section class="card">
+            <header class="card-header">
+                <h2>Event sources and formatting</h2>
+                <p>
+                    <code>addEventSource</code>, <code>getEventSources</code>,
+                    <code>refetchEvents</code>, <code>calendar.formatDate/formatRange/formatIso</code>,
+                    and the top-level <code>FullCalendar.formatRange</code>.
+                </p>
+            </header>
+            <div class="toolbar">
+                <button class="btn btn-primary" ws-onclick="AddEventSource">Add event source</button>
+                <button class="btn" ws-onclick="RefetchSources">refetchEvents</button>
+                <button class="btn" ws-onclick="ListSources">getEventSources</button>
+                <button class="btn" ws-onclick="FormatDemo">Format dates</button>
+            </div>
+            <pre class="readout">${info}</pre>
+        </section>
+
+        <section class="card">
+            <header class="card-header">
+                <h2>External drag</h2>
+                <p>
+                    <code>ExternalDraggable</code> from the interaction plugin: drag a chip onto the
+                    calendar to create an event at that date.
+                </p>
+            </header>
+            <div class="external-events" id="external-events">
+                <div class="external-event chip-indigo">Team offsite</div>
+                <div class="external-event chip-teal">Customer call</div>
+                <div class="external-event chip-amber">Sprint planning</div>
+            </div>
+            <div class="toolbar">
+                <button class="btn btn-primary" ws-onclick="SetupExternalDrag">Install draggable</button>
+                <button class="btn" ws-onclick="DestroyExternalDrag">Destroy draggable</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <header class="card-header">
+                <h2>Log</h2>
+                <p>
+                    Every listener and API call in the sample appends a line here —
+                    <code>dateClick</code>, <code>select</code>, <code>eventClick</code>,
+                    <code>eventDrop</code>, <code>eventResize</code>, <code>eventAdd/Change/Remove</code>,
+                    <code>datesSet</code>, <code>eventsSet</code>, <code>loading</code>,
+                    <code>viewDidMount</code>, <code>windowResize</code>.
+                </p>
+            </header>
+            <pre class="log">${logText}</pre>
+        </section>
+    </main>
+
+    <script type="module" src="Scripts/WebSharper.FullCalendar.Sample.min.js"></script>
+</body>
+</html>

@@ -16,7 +16,7 @@ module DaygridPlugin =
                 "lastCol", T<int>
             ] @ CoreInterfaces.SegFields // Inherits CoreInterfaces.Seg
         }
-        |> Import "TableSeg" "@fullcalendar/daygrid"
+        |> Import "TableSeg" "@fullcalendar/daygrid/internal"
 
 
     let DayTableProps =
@@ -53,7 +53,7 @@ module DaygridPlugin =
         |+> Instance [
             "render" => T<unit> ^-> Core.VNode
         ]
-        |> Import "DayTable" "@fullcalendar/daygrid"
+        |> Import "DayTable" "@fullcalendar/daygrid/internal"
 
     let DayTableSlicer =
         Class "DayTableSlicer"
@@ -62,7 +62,7 @@ module DaygridPlugin =
             "forceDayIfListItem" =@ T<bool>
             "sliceRange" => CoreInterfaces.DateRange?dateRange * Core.DayTableModel?model ^-> !| TableSeg
         ]
-        |> Import "DayTableSlicer" "@fullcalendar/daygrid"
+        |> Import "DayTableSlicer" "@fullcalendar/daygrid/internal"
 
     let TableDateProfileGenerator =
         Class "TableDateProfileGenerator"
@@ -122,7 +122,7 @@ module DaygridPlugin =
             "prepareHits" => T<unit> ^-> T<unit>
             "queryHit" => T<float>?left * T<float>?top ^-> CoreInterfaces.Hit
         ]
-        |> Import "TableRows" "@fullcalendar/daygrid"
+        |> Import "TableRows" "@fullcalendar/daygrid/internal"
 
     let TableProps = 
         Pattern.Config "TableProps" {
@@ -148,7 +148,7 @@ module DaygridPlugin =
             "requestScrollReset" => T<unit> ^-> T<unit>
             "flushScrollReset" => T<unit> ^-> T<unit>
         ]
-        |> Import "Table" "@fullcalendar/daygrid"
+        |> Import "Table" "@fullcalendar/daygrid/internal"
 
     let TableView =
         Generic - fun state ->
@@ -158,7 +158,7 @@ module DaygridPlugin =
             "renderSimpleLayout" => CoreInterfaces.ChunkConfigRowContent?headerRowContent * (CoreInterfaces.ChunkContentCallbackArgs ^-> Core.VNode)?bodyContent ^-> Core.VNode
             "renderHScrollLayout" => CoreInterfaces.ChunkConfigRowContent?headerRowContent * (CoreInterfaces.ChunkContentCallbackArgs ^-> Core.VNode)?bodyContent * T<int>?colCnt * T<int>?dayMinWidth^-> Core.VNode
         ]
-        |> Import "TableView" "@fullcalendar/daygrid"
+        |> Import "TableView" "@fullcalendar/daygrid/internal"
 
     let DayTableView =
         Class "DayTableView"
@@ -166,4 +166,4 @@ module DaygridPlugin =
         |+> Instance [
             "render" => T<unit> ^-> Core.VNode
         ]
-        |> Import "DayTableView" "@fullcalendar/daygrid"
+        |> Import "DayGridView" "@fullcalendar/daygrid/internal"

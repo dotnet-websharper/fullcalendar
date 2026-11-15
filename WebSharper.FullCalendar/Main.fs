@@ -28,7 +28,9 @@ module Definition =
 
     let FullCalendar = 
         Class "FullCalendar"
+        |> Import "*" "@fullcalendar/core"
         |+> Static [
+            // Plugin entry points, each imported from its own npm package.
             "interactionPlugin" =? CoreInterfaces.PluginDef
             |> ImportDefault "@fullcalendar/interaction"
 
@@ -43,6 +45,14 @@ module Definition =
 
             "timegridPlugin" =? CoreInterfaces.PluginDef
             |> ImportDefault "@fullcalendar/timegrid"
+
+            // Top-level API from @fullcalendar/core.
+            "formatDate" => Core.DateInput?dateInput * !?CoreInterfaces.FormatDateOptions?options ^-> T<string>
+            "formatRange" => Core.DateInput?startInput * Core.DateInput?endInput * CoreInterfaces.FormatRangeOptions?options ^-> T<string>
+            "createPlugin" => CoreInterfaces.PluginDefInput?input ^-> CoreInterfaces.PluginDef
+            "version" =? T<string>
+            "globalLocales" =? !| CoreInterfaces.LocaleInput
+            "globalPlugins" =? !| CoreInterfaces.PluginDef
         ]
 
     let Assembly =
@@ -97,6 +107,12 @@ module Definition =
                 CoreEnums.Direction
                 CoreEnums.WeekFormat
                 CoreEnums.MeridiemFormat
+                CoreEnums.NumericStyle
+                CoreEnums.MonthStyle
+                CoreEnums.TextStyle
+                CoreEnums.DateStyle
+                CoreEnums.HourCycle
+                CoreEnums.FormatMatcher
                 CoreEnums.OverflowValue
 
                 // Core Interfaces
@@ -106,6 +122,7 @@ module Definition =
                 CoreInterfaces.EventApi
                 CoreInterfaces.CalendarListenerRefiners
                 CoreInterfaces.PluginDef
+                CoreInterfaces.PluginDefInput
                 CoreInterfaces.DateSpanApi
                 CoreInterfaces.CalendarOptions
                 CoreInterfaces.ViewContext
@@ -132,6 +149,8 @@ module Definition =
                 CoreInterfaces.DateFormattingContext
                 CoreInterfaces.DateFormatter
                 CoreInterfaces.NativeFormatterOptions
+                CoreInterfaces.FormatDateOptions
+                CoreInterfaces.FormatRangeOptions
                 CoreInterfaces.DragMetaRefiners
                 CoreInterfaces.ButtonIconsInput
                 CoreInterfaces.CustomButtonInput

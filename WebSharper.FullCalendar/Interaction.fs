@@ -9,11 +9,11 @@ module InteractionPlugin =
         
     module CoreInterfaces = Core.Interfaces
 
+    // FullCalendar does not export its implementation classes from the
+    // interaction plugin, so these are type-only: they describe the objects
+    // reachable through `ExternalDraggable.Dragging` and friends.
     let PointerDragging =
         Class "PointerDragging"
-        |+> Static [
-            Constructor (T<Dom.EventTarget>?containerEl)
-        ]
         |+> Instance [
             "containerEl" =@ T<Dom.EventTarget>
             "subjectEl" =@ !?T<HTMLElement>
@@ -80,9 +80,6 @@ module InteractionPlugin =
     let ScrollGeomCache =
         Class "ScrollGeomCache"
         |=> Inherits Core.ScrollController
-        |+> Static [
-            Constructor (Core.ScrollController?scrollController * T<bool>?doesListening)
-        ]
         |+> Instance [
             "clientRect" =@ CoreInterfaces.Rect
             "origScrollTop" =@ T<float>
@@ -135,9 +132,6 @@ module InteractionPlugin =
     let FeaturefulElementDragging =
         Class "FeaturefulElementDragging"
         |=> Inherits CoreInterfaces.ElementDragging
-        |+> Static [
-            Constructor (T<HTMLElement>?containerEl * !?T<string>?selector)
-        ]
         |+> Instance [
             "pointer" =@ PointerDragging
             "mirror" =@ ElementMirror
@@ -315,7 +309,6 @@ module InteractionPlugin =
                 "appendTo", T<HTMLElement>
             ]
         }
-        |> Import "ExternalDraggable" "@fullcalendar/interaction"
 
     let ExternalDraggable =
         Class "ExternalDraggable"
@@ -331,13 +324,11 @@ module InteractionPlugin =
             "handleDragStart" => CoreInterfaces.PointerDragEvent?ev ^-> T<unit>
             "destroy" => T<unit> ^-> T<unit>
         ]
+        |> Import "Draggable" "@fullcalendar/interaction"
 
     let InferredElementDragging =
         Class "InferredElementDragging"
         |=> Inherits CoreInterfaces.ElementDragging
-        |+> Static [
-            Constructor (T<HTMLElement>?containerEl)
-        ]
         |+> Instance [
             "pointer" =@ PointerDragging
             "shouldIgnoreMove" =@ T<bool>

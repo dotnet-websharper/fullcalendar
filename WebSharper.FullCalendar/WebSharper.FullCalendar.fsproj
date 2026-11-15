@@ -2,16 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
 	<PropertyGroup>
 		<NpmDependencies>
-			<NpmPackage Name="@fullcalendar/core" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
-			<NpmPackage Name="@fullcalendar/daygrid" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
-			<NpmPackage Name="@fullcalendar/interaction" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
-			<NpmPackage Name="@fullcalendar/list" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
-			<NpmPackage Name="@fullcalendar/multimonth" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
-			<NpmPackage Name="@fullcalendar/timegrid" Version="gt= 6.0.0 lt 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/core" Version="&gt;= 6.1.22 &lt; 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/daygrid" Version="&gt;= 6.1.22 &lt; 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/interaction" Version="&gt;= 6.1.22 &lt; 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/list" Version="&gt;= 6.1.22 &lt; 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/multimonth" Version="&gt;= 6.1.22 &lt; 7.0.0" ResolutionStrategy="Max" />
+			<NpmPackage Name="@fullcalendar/timegrid" Version="&gt;= 6.1.22 &lt; 7.0.0" ResolutionStrategy="Max" />
 		</NpmDependencies>
 	</PropertyGroup>
 
@@ -26,13 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="WebSharper" Version="8.0.0.540" />    
-    <PackageReference Include="WebSharper.FSharp" Version="8.0.0.540" />    
-    <PackageReference Include="WebSharper.TouchEvents" Version="8.0.0.540" />
+    <PackageReference Include="WebSharper" Version="11.0.0.695-preview.1" />
+    <PackageReference Include="WebSharper.FSharp" Version="11.0.0.695-preview.1" />
+    <PackageReference Include="WebSharper.TouchEvents" Version="11.0.0.695-preview.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="9.0.300-beta.25181.1" />
+    <PackageReference Update="FSharp.Core" Version="11.0.101" />
   </ItemGroup>
 
 </Project>
