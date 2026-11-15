@@ -210,6 +210,7 @@ The sample is a static SPA. Build it, then serve `dist/`:
 
 ```bash
 dotnet tool install -g dotnet-serve   # once
+dotnet tool restore && dotnet paket restore
 dotnet build WebSharper.FullCalendar.Sample/WebSharper.FullCalendar.Sample.fsproj -c Release
 dotnet serve -d dist -p 5202
 ```
@@ -241,6 +242,10 @@ runtime) and Node.js.
 ```bash
 git clone https://github.com/dotnet-websharper/fullcalendar.git
 cd fullcalendar
+
+# dependencies are managed by Paket
+dotnet tool restore
+dotnet paket restore
 
 # the binding
 dotnet build WebSharper.FullCalendar/WebSharper.FullCalendar.fsproj -c Release
